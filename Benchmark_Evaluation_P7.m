@@ -6,7 +6,7 @@
 % try to save the results in a different path.
 
 %% setup the problem
-clc;
+clear; clc;
 ground_truth = 1.089;
 fmincon_num = 50;
 fmincon_time_set = nan(fmincon_num, 1);

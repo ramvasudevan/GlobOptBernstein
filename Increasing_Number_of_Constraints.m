@@ -6,7 +6,8 @@
 % try to save the results in a different path.
 
 %% setup the problem
-problem_index = 1;
+clear; clc;
+problem_index = 4;
 total_steps = 20;
 step = 10;
 load(['problem_matrix/more_',num2str(problem_index),'.mat']);
@@ -23,8 +24,9 @@ bernstein_apex_mem_set = nan(total_steps,1);
 
 for i = 1:total_steps
     clc;
+    disp(i);
     %% setup the constraints
-    raw_constraints = more_problem.constraints(1:(total_steps*step));
+    raw_constraints = more_problem.constraints(1:(i*step));
     
     %% Bernstein Algorithm
     [bernstein_cost,bernstein_constraint,cons_length] = setup_problem_bernstein(raw_cost,raw_constraints);
@@ -93,8 +95,8 @@ infos.bernstein_value_set = bernstein_value_set;
 infos.bernstein_apex_mem_set = bernstein_apex_mem_set;
 
 %% Lasserre
-Lasserre_d_choice = [2,2,2,4,2,2,2,2,2];
-Lasserre_k_choice = [2,2,2,4,2,2,2,2,2];
+Lasserre_d_choice = [3,4,2,4,2,2,2,2,2];
+Lasserre_k_choice = [3,4,2,4,2,2,2,2,2];
 Lasserre_d = Lasserre_d_choice(problem_index+1);
 Lasserre_k = Lasserre_k_choice(problem_index+1);
 Lasserre_time_set = nan(total_steps,1);
@@ -102,7 +104,8 @@ Lasserre_value_set = nan(total_steps,1);
 
 for i = 1:total_steps
     clc;
-    raw_constraints = more_problem.constraints(1:(total_steps*step));
+    disp(i);
+    raw_constraints = more_problem.constraints(1:(i*step));
     BSOSsolver = 'sqlp';
     SBSOSsolver = 'sqlp';
     Lss_constraints = scale_for_lss(raw_constraints);

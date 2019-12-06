@@ -1,5 +1,5 @@
 function [cost,constraints,feasible_point] = setup_problem_matrix_more_0(num)
-% Cube
+% Cube / 100
 cost = [[   0,   0,  9801.01201]
         [   1,   0, -118800.044]
         [   2,   0,  597600.04]
@@ -22,7 +22,7 @@ degree = [   0,     0;
          
 constraints = cell(num,1);
 
-% This is the global optimum of Cube
+% This is the global optimum of Cube / 100
 % f(x) = 0
 feasible_point = [0.55;
                   0.55];

@@ -1,5 +1,5 @@
 function [cost,constraints,feasible_point] = setup_problem_matrix_more_9(num)
-% Wood
+% Wood / 10
 cost = [[   0,   0,   0,   0,                        12209408.2]
         [ 1.0,   0,   0,   0,                       -88000044.0]
         [ 2.0,   0,   0,   0,                       248000040.0]
@@ -37,7 +37,7 @@ degree = [  0, 0, 0, 0;
          
 constraints = cell(num,1);
 
-% This is the global optimum of Wood
+% This is the global optimum of Wood / 10
 % f(x) = 0
 feasible_point = [0.55;
                   0.55;

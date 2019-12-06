@@ -1,6 +1,6 @@
 %% optimal value analysis
-problem_index = 1;
-ground_truth = [0;0;-124.75;-24777;0;0;0;1.712780354;0;0];
+problem_index = 4;
+ground_truth = [0;0;-124.75;-24.77109375;0;0;0;0.000001712780354;0;0];
 total_steps = 20;
 step = 10;
 load(['Increasing_Number_of_Constraints/more_',num2str(problem_index),'_info.mat']);

@@ -6,8 +6,8 @@
 % try to save the results in a different path.
 
 %% setup the problem
-clc;
-problem_index = 1;
+clear; clc;
+problem_index = 2;
 ground_truth = [-5.50796,-6961.81388,3,-4,0,6395.5078,1.089,42.6769];
 eval(strcat('[raw_cost,raw_constraints] = setup_problem_matrix_P',num2str(problem_index),'();'));
 numDimension = size(raw_cost,2) - 1;

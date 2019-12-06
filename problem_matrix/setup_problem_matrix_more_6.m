@@ -1,5 +1,5 @@
 function [cost,constraints,feasible_point] = setup_problem_matrix_more_6(num)
-% DixonPrice 4D
+% DixonPrice 4D / 1000
 cost = [[   0,   0,   0,   0,                           397.021]
         [ 1.0,   0,   0,   0,                            -17.24]
         [ 2.0,   0,   0,   0,                               1.2]
@@ -40,12 +40,12 @@ degree = [  0, 0, 0, 0;
          
 constraints = cell(num,1);
 
-% This is the global optimum of DixonPrice 4D
+% This is the global optimum of DixonPrice 4D / 1000
 % f(x) = 0
-feasible_point = [2^(-(2^1-2)/(2^1));
-                  2^(-(2^2-2)/(2^2));
-                  2^(-(2^3-2)/(2^3));
-                  2^(-(2^4-2)/(2^4))];
+feasible_point = ([2^(-(2^1-2)/(2^1));
+                   2^(-(2^2-2)/(2^2));
+                   2^(-(2^3-2)/(2^3));
+                   2^(-(2^4-2)/(2^4))] + 10) ./ 20;
 
 
 for i = 1:num

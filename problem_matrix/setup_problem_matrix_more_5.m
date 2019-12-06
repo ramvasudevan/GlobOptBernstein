@@ -1,5 +1,5 @@
 function [cost,constraints,feasible_point] = setup_problem_matrix_more_5(num)
-% DixonPrice 3D
+% DixonPrice 3D / 1000
 cost = [[   0,   0,   0,                           220.621]
         [ 1.0,   0,   0,                            -17.24]
         [ 2.0,   0,   0,                               1.2]
@@ -29,11 +29,11 @@ degree = [  0, 0, 0;
          
 constraints = cell(num,1);
 
-% This is the global optimum of DixonPrice 3D
+% This is the global optimum of DixonPrice 3D / 1000
 % f(x) = 0
-feasible_point = [2^(-(2^1-2)/(2^1));
-                  2^(-(2^2-2)/(2^2));
-                  2^(-(2^3-2)/(2^3))];
+feasible_point = ([2^(-(2^1-2)/(2^1));
+                   2^(-(2^2-2)/(2^2));
+                   2^(-(2^3-2)/(2^3))] + 10) ./ 20;
 
 for i = 1:num
     rand_num = 10 * rand(9,1) - 5;

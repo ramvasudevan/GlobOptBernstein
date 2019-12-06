@@ -1,4 +1,5 @@
 function [cost,constraints,feasible_point] = setup_problem_matrix_more_3(num)
+% Deckkers-Aarts / 1000
 cost = [[   0,   0,                           43456.4]
         [ 1.0,   0,                          -190208.0]
         [ 2.0,   0,                           285952.0]
@@ -51,12 +52,12 @@ degree = [   0,     0;
 constraints = cell(num,1);
 
 % This is the global optimum of Deckkers-Aarts
-% f(x) = -24777
+% f(x) = -24771.09375 / 1000
 feasible_point = [0.5;
                   0.875];
               
 % This is another global optimum of Deckkers-Aarts
-% f(x) = -24777
+% f(x) = -24771.09375 / 1000
 % feasible_point = [0.5;
 %                   0.125];
 

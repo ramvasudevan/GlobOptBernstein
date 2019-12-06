@@ -1,9 +1,10 @@
 function [cost,constraints,feasible_point] = setup_problem_matrix_more_2(num)
 % Bukin02
-cost = [[   0,   0, -424.75]
-        [ 1.0,   0,   299.0]
-        [ 2.0,   0,   -99.0]
-        [   0, 1.0,   600.0]];
+cost = [[   0,   0, 775.25]
+        [ 1.0,   0, 299   ]
+        [ 2.0,   0, -99   ]
+        [   0, 1.0, -3600 ]
+        [   0, 2.0, 3600  ]];
 
 degree = [   0,     0;
              2,     0;
