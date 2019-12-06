@@ -1,3 +1,9 @@
+%% Introduction
+% This is the script that runs the results for the problems in
+% our paper V.C. All the results all stored in 'Increasing_Number_of_Constraints/'
+% named with 'more_X_infos.mat' and they are consistent with what is shown 
+% in this section of our paper. If you want a different comparison, 
+% try to save the results in a different path.
 
 %% setup the problem
 problem_index = 0;
@@ -79,18 +85,28 @@ for i = 1:total_steps
     end
 end
 
-
+infos.fmincon_time_set = fmincon_time_set;
+infos.fmincon_value_set = fmincon_value_set;
+infos.fmincon_exit_flag = fmincon_exit_flag;
+infos.bernstein_time_set = bernstein_time_set;
+infos.bernstein_value_set = bernstein_value_set;
+infos.bernstein_apex_mem_set = bernstein_apex_mem_set;
 
 %% Lasserre
+Lasserre_d_choice = [2,4,2,2,2,2,2,2];
+Lasserre_k_choice = [2,4,2,2,2,2,2,2];
+Lasserre_d = Lasserre_d_choice(problem_index+1);
+Lasserre_k = Lasserre_k_choice(problem_index+1);
 Lasserre_time_set = nan(total_steps,1);
 Lasserre_value_set = nan(total_steps,1);
 
 for i = 1:total_steps
     clc;
+    raw_constraints = more_problem.constraints(1:(total_steps*step));
     BSOSsolver = 'sqlp';
     SBSOSsolver = 'sqlp';
     Lss_constraints = scale_for_lss(raw_constraints);
-    setup_Lasserre = @()setup_problem_Lasserre(raw_cost,Lss_constraints,2,2);
+    setup_Lasserre = @()setup_problem_Lasserre(raw_cost,Lss_constraints,Lasserre_d,Lasserre_k);
     tag = 'setup_Lasserre';
     eval(['[pop.F,pop.G,pop.I,pop.J,pop.d,pop.k] = ',tag,'();']);
     k = pop.k;
@@ -118,3 +134,8 @@ for i = 1:total_steps
     Lasserre_value_set(i) = Lasserre_result; 
 end
 
+infos.Lasserre_time_set = Lasserre_time_set;
+infos.Lasserre_value_set = Lasserre_value_set;
+
+%% save the data
+save(['Increasing_Number_of_Constraints/more_',num2str(problem_index),'_info.mat'],'infos');

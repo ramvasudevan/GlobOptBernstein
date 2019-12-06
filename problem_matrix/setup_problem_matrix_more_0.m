@@ -23,6 +23,7 @@ degree = [   0,     0;
 constraints = cell(num,1);
 
 % This is the global optimum of Cube
+% f(x) = 0
 feasible_point = [0.55;
                   0.55];
 
