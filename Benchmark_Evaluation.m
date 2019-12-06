@@ -1,12 +1,15 @@
 %% Introduction
-% This is the script that runs the results for benchmark problems P1-P8 in
-% our paper V.B. All the results all stored in the folder
-% Benchmark_Evaluation/
+% This is the script that runs the results for benchmark problems P1-P8 (except P7) in
+% our paper V.B. All the results all stored in 'Benchmark_Evaluation/'
+% named with 'PX_infos.mat' and they are consistent with what is shown 
+% in this section of our paper. If you want a different comparison, 
+% try to save the results in a different path.
 
 %% setup the problem
-problem_index = 8;
+clc;
+problem_index = 1;
 ground_truth = [-5.50796,-6961.81388,3,-4,0,6395.5078,1.089,42.6769];
-eval(strcat('[raw_cost,raw_constraints] = setup_problem_matrix_P',num2str(problem_index),'(0);'));
+eval(strcat('[raw_cost,raw_constraints] = setup_problem_matrix_P',num2str(problem_index),'();'));
 numDimension = size(raw_cost,2) - 1;
 
 %% Bernstein Algorithm
@@ -102,16 +105,16 @@ Lasserre_time = toc(Lasserre_start_t);
 Lasserre_value = psol_temp.obj;
 
 %% save the data
-% infos.fmincon_time_set = fmincon_time_set;
-% infos.fmincon_value_set = fmincon_value_set;
-% infos.fmincon_exit_flag = fmincon_exit_flag;
-% infos.bernstein_time = bernstein_time;
-% infos.bernstein_value = bernstein_value;
-% infos.bernstein_apex_mem = bernstein_apex_memory;
-% infos.Lasserre_time = Lasserre_time;
-% infos.Lasserre_value = Lasserre_value;
-% infos.Lasserre_d = Lasserre_d;
-% infos.Lasserre_k = Lasserre_k;
+infos.fmincon_time_set = fmincon_time_set;
+infos.fmincon_value_set = fmincon_value_set;
+infos.fmincon_exit_flag = fmincon_exit_flag;
+infos.bernstein_time = bernstein_time;
+infos.bernstein_value = bernstein_value;
+infos.bernstein_apex_mem = bernstein_apex_memory;
+infos.Lasserre_time = Lasserre_time;
+infos.Lasserre_value = Lasserre_value;
+infos.Lasserre_d = Lasserre_d;
+infos.Lasserre_k = Lasserre_k;
 % save(strcat('Benchmark_Evaluation/P',num2str(problem_index),'_infos.mat'),'infos');
 
 %% data analysis

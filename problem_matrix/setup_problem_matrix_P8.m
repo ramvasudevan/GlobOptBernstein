@@ -1,4 +1,4 @@
-function [cost,constraints] = setup_problem_matrix_P8(num)
+function [cost,constraints] = setup_problem_matrix_P8()
 cost = [[   0,   0,   0,   0,  35.919]
         [ 1.0,   0,   0,   0,  58.701]
         [   0, 1.0,   0,   0, 177.216]

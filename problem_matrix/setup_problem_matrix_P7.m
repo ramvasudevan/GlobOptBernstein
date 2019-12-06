@@ -1,4 +1,4 @@
-function [cost,constraints] = setup_problem_matrix_P7(num)
+function [cost,constraints] = setup_problem_matrix_P7()
 cost = [0   0   0   1   5];
 
 g1 = [0    0    0     0    1.4000;

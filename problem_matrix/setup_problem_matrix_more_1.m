@@ -1,4 +1,5 @@
 function [cost,constraints,feasible_point] = setup_problem_matrix_more_1(num)
+% Beale
 cost = [[   0,   0,  10124.0741703125]
         [ 1.0,   0, -40486.6055]
         [ 2.0,   0,  40476.92]
@@ -30,7 +31,10 @@ degree = [   0,     0;
          
 constraints = cell(num,1);
 
-feasible_point = rand(2,1);
+% This is the global optimum of Beale
+% f(x) = 0
+feasible_point = [0.65;
+                  0.525];
 
 for i = 1:num
     rand_num = 10 * rand(5,1) - 5;

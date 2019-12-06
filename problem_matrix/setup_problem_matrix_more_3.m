@@ -50,7 +50,15 @@ degree = [   0,     0;
          
 constraints = cell(num,1);
 
-feasible_point = rand(2,1);
+% This is the global optimum of Deckkers-Aarts
+% f(x) = -24777
+feasible_point = [0.5;
+                  0.875];
+              
+% This is another global optimum of Deckkers-Aarts
+% f(x) = -24777
+% feasible_point = [0.5;
+%                   0.125];
 
 for i = 1:num
     rand_num = 10 * rand(5,1) - 5;

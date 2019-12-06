@@ -1,4 +1,4 @@
-function [cost,constraints] = setup_problem_matrix_P5(num)
+function [cost,constraints] = setup_problem_matrix_P5()
 cost = [0,  0,  0,  -5;
         0,  0,  1,   10];
 

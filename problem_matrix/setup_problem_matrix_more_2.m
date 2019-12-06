@@ -1,4 +1,5 @@
 function [cost,constraints,feasible_point] = setup_problem_matrix_more_2(num)
+% Bukin02
 cost = [[   0,   0, -424.75]
         [ 1.0,   0,   299.0]
         [ 2.0,   0,   -99.0]
@@ -13,7 +14,10 @@ degree = [   0,     0;
          
 constraints = cell(num,1);
 
-feasible_point = rand(2,1);
+% This is the global optimum of Bukin02
+% f(x) = -124.75
+feasible_point = [0;
+                  0.5];
 
 for i = 1:num
     rand_num = 10 * rand(5,1) - 5;

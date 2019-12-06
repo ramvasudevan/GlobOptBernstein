@@ -1,4 +1,5 @@
 function [cost,constraints,feasible_point] = setup_problem_matrix_more_7(num)
+% El-Attar-Vidyasagar-Dutta
 cost = [[   0,   0,                       980297.66355]
         [ 1.0,   0,                         78412.8372]
         [ 2.0,   0,                          -75208.84]
@@ -26,7 +27,10 @@ degree = [   0,     0;
          
 constraints = cell(num,1);
 
-feasible_point = rand(2,1);
+% This is the global optimum of El-Attar-Vidyasagar-Dutta
+% f(x) = 1.712780354
+feasible_point = [0.51704593415;
+                  0.4891428348];
 
 for i = 1:num
     rand_num = 10 * rand(5,1) - 5;
