@@ -6,7 +6,7 @@
 % try to save the results in a different path.
 
 %% setup the problem
-problem_index = 0;
+problem_index = 1;
 total_steps = 20;
 step = 10;
 load(['problem_matrix/more_',num2str(problem_index),'.mat']);
@@ -93,8 +93,8 @@ infos.bernstein_value_set = bernstein_value_set;
 infos.bernstein_apex_mem_set = bernstein_apex_mem_set;
 
 %% Lasserre
-Lasserre_d_choice = [2,4,2,2,2,2,2,2];
-Lasserre_k_choice = [2,4,2,2,2,2,2,2];
+Lasserre_d_choice = [2,2,2,4,2,2,2,2,2];
+Lasserre_k_choice = [2,2,2,4,2,2,2,2,2];
 Lasserre_d = Lasserre_d_choice(problem_index+1);
 Lasserre_k = Lasserre_k_choice(problem_index+1);
 Lasserre_time_set = nan(total_steps,1);
