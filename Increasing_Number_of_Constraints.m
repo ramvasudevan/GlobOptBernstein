@@ -7,7 +7,7 @@
 
 %% setup the problem
 clear; clc;
-problem_index = 4;
+problem_index = 9;
 total_steps = 20;
 step = 10;
 load(['problem_matrix/more_',num2str(problem_index),'.mat']);
@@ -95,8 +95,8 @@ infos.bernstein_value_set = bernstein_value_set;
 infos.bernstein_apex_mem_set = bernstein_apex_mem_set;
 
 %% Lasserre
-Lasserre_d_choice = [3,4,2,4,2,2,2,2,2];
-Lasserre_k_choice = [3,4,2,4,2,2,2,2,2];
+Lasserre_d_choice = [3,4,2,4,2,2,2,3,2,2];
+Lasserre_k_choice = [3,4,2,4,2,2,2,3,2,2];
 Lasserre_d = Lasserre_d_choice(problem_index+1);
 Lasserre_k = Lasserre_k_choice(problem_index+1);
 Lasserre_time_set = nan(total_steps,1);
@@ -141,4 +141,4 @@ infos.Lasserre_time_set = Lasserre_time_set;
 infos.Lasserre_value_set = Lasserre_value_set;
 
 %% save the data
-save(['Increasing_Number_of_Constraints/more_',num2str(problem_index),'_info.mat'],'infos');
+% save(['Increasing_Number_of_Constraints/more_',num2str(problem_index),'_info.mat'],'infos');

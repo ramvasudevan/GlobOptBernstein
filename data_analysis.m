@@ -1,5 +1,5 @@
 %% optimal value analysis
-problem_index = 4;
+problem_index = 9;
 ground_truth = [0;0;-124.75;-24.77109375;0;0;0;0.000001712780354;0;0];
 total_steps = 20;
 step = 10;
