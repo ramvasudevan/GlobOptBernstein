@@ -8,7 +8,7 @@
 %% setup the problem
 clear; clc;
 problem_index = 2;
-ground_truth = [-5.50796,-6961.81388,3,-4,0,6395.5078,1.089,42.6769];
+ground_truth = [-5.5080132636,-6961.8138816446,3,-4,0,6395.5078,1.0898639714,42.4440570797];
 eval(strcat('[raw_cost,raw_constraints] = setup_problem_matrix_P',num2str(problem_index),'();'));
 numDimension = size(raw_cost,2) - 1;
 
