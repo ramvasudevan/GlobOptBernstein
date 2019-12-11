@@ -69,6 +69,9 @@ title('solution error vs. number of constraints');
 xtickangle(45)
 set(gca,'FontSize',14)
 
+xtickangle(45)
+set(gca,'FontSize',14)
+
 %% time analysis
 % get data on time spent
 pcba_time = infos.bernstein_time_set;
@@ -109,12 +112,12 @@ if save_pdfs_flag
     set(f1,'Units','Inches');
     pos = get(f1,'Position');
     set(f1,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
-    
+
     % size the second figure correctly
     set(f2,'Units','Inches');
     pos = get(f2,'Position');
     set(f2,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
-    
+
     % print
     print(f1,'increasing_constraints_error.pdf','-dpdf','-r0')
     print(f2,'increasing_constraints_time.pdf','-dpdf','-r0')
