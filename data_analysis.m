@@ -30,8 +30,17 @@ fmincon_color = [1 0 0] ;
 save_pdfs_flag = true ;
 
 %% optimal value analysis (automated from here)
-% ground truth values
-ground_truth = [0;0;-124.75;-24.77109375;0;0;0;0.000001712780354;0;0];
+% true optimal value for each cost function
+ground_truth = [0;
+                0;
+                -124.75;
+                -24.77109375;
+                0;
+                0;
+                0;
+                0.000001712780354;
+                0;
+                0];
 
 % total number of x ticks
 total_steps = 20;

@@ -7,7 +7,7 @@
 
 %% setup the problem
 clear; clc;
-ground_truth = 1.089;
+ground_truth = 1.0898639714;
 fmincon_num = 50;
 fmincon_time_set = nan(fmincon_num, 1);
 fmincon_value_set = nan(fmincon_num, 1);
@@ -75,16 +75,24 @@ for j = 1:fmincon_num
 end
 
 %% save the data
-infos.fmincon_time_set = fmincon_time_set;
-infos.fmincon_value_set = fmincon_value_set;
-infos.fmincon_exit_flag = fmincon_exit_flag;
 infos.bernstein_time = bernstein_time;
 infos.bernstein_value = bernstein_value;
 infos.bernstein_apex_mem = bernstein_apex_memory;
+infos.bernstein_accuracy = bernstein_accuracy;
+infos.fmincon_time_set = fmincon_time_set;
+infos.fmincon_value_set = fmincon_value_set;
+infos.fmincon_exit_flag = fmincon_exit_flag;
 % save(strcat('Benchmark_Evaluation/P7_infos.mat'),'infos');
 
 %% data analysis
-disp(median(infos.fmincon_time_set));
-disp(median(infos.fmincon_value_set) - ground_truth);
+disp('PCBA time:')
 disp(infos.bernstein_time);
+disp('PCBA error:')
 disp(infos.bernstein_value - ground_truth);
+disp('PCBA stopping crtieria:')
+disp(infos.bernstein_accuracy);
+disp(' ')
+disp('fmincon time median:')
+disp(median(infos.fmincon_time_set));
+disp('fmincon error median:')
+disp(median(infos.fmincon_value_set) - ground_truth);

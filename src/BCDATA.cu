@@ -1493,33 +1493,33 @@ int BC::solve(bool debugMode, bool verboseMode) {
 	findFlag();
 
 	target_accuracy = (bdMax[0] - bdMin[0]) * STOPPING_CRITERIA;
-	mexPrintf("TARGET ACCURACY: %f\n", target_accuracy);
+	mexPrintf("Target accuracy: %f\n", target_accuracy);
 
 	for (iter = 1; iter <= MAX_ITER_NUM; iter++) {
 		bool ifBreak = false;
 		for (dim = 0; dim < numDimension; dim++) {
 			if ((numUnit << 1) > MAX_UNIT_NUM) {
-				mexPrintf("TOO MANY UNITS!\n");
+				mexPrintf("Too many units, the program exits without meeting the stopping criteria!\n");
 				exitFlag = -54321;
 				ifBreak = true;
 				break;
 			}
 
-			if (verboseMode) mexPrintf("START ITERATION %d DIM %d\n", iter, dim);
+			if (verboseMode) mexPrintf("Start iteration %d dim %d\n", iter, dim);
 			dilation(dim);
 			apex_numUnit = numUnit > apex_numUnit ? numUnit : apex_numUnit;
 			int_iter[dim]++;
-			if (verboseMode) mexPrintf("DILATION UNIT NUMBER: %d\n", numUnit);
+			if (verboseMode) mexPrintf("Dilation patch number: %d\n", numUnit);
 			findFlag();
 			if (debugMode) debug_print();
 			eliminate();
 
-			if (verboseMode) mexPrintf("FINAL UNIT NUMBER: %d\nESTI MIN: %.8f\nESTIMATED BOUND: %.8f\n", numUnit, estiMin, estimated_accuracy);
+			if (verboseMode) mexPrintf("Final patch number: %d\nEstimated Minimum: %.8f\nEstimated Bound: %.8f\n", numUnit, estiMin, estimated_accuracy);
 			if (debugMode) debug_print();
 			if (verboseMode) mexPrintf("\n");
 
 			if (numUnit == 0) {
-				mexPrintf("INFEASIBLE!\n");
+				mexPrintf("Infeasible!\n");
 				exitFlag = -12345;
 				ifBreak = true;
 				break;
@@ -1530,15 +1530,14 @@ int BC::solve(bool debugMode, bool verboseMode) {
 				break;
 			}
 		}
-		/*
-		mexPrintf("FINISH ITERATION %d\n", iter);
-		mexPrintf("FINAL UNIT NUMBER: %d\nESTI MIN: %.8f\n", numUnit, estiMin);
-		*/
+		
+		mexPrintf("Finish Iteration %d\n", iter);
+		mexPrintf("Final Patch number: %d\nEstimated Minimum: %.8f\n", numUnit, estiMin);
 
 		if (ifBreak) break;
 	}
 
-	mexPrintf("ESTIMATED ACCURACY: %f\n", estimated_accuracy);
+	mexPrintf("Estimated accuracy: %f\n", estimated_accuracy);
 
 	if (exitFlag != -12345) {
 		finalResult();

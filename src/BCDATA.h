@@ -28,7 +28,8 @@ All the information is promised to be stored in the same index in no matter whic
 
 #include "poly2BC.h"
 
-#define MAX_ITER_NUM 25
+// maximum of iteration number, should NOT be larger than 32 since position info is stored in uint32_t
+#define MAX_ITER_NUM 30
 
 // used for shared memory pre-allocation, the maximum size of a Bernstein patch
 #define MAX_UNIT_LENGTH 1000
