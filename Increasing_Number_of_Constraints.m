@@ -31,7 +31,7 @@ for i = 1:total_steps
     %% Bernstein Algorithm
     [bernstein_cost,bernstein_constraint,cons_length] = setup_problem_bernstein(raw_cost,raw_constraints);
     bernstein_start_t = tic;
-    [bernstein_opt,bernstein_apex_memory,bernstein_accuracy] = bernstein(bernstein_cost,bernstein_constraint,cons_length,0,0);
+    [bernstein_opt,bernstein_apex_memory,bernstein_accuracy] = PCBA(bernstein_cost,bernstein_constraint,cons_length,0,0);
     bernstein_time = toc(bernstein_start_t);
     bernstein_time_set(i) = bernstein_time;
     bernstein_apex_mem_set(i) = bernstein_apex_memory;

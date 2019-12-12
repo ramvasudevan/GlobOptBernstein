@@ -22,7 +22,7 @@ numDimension = size(raw_cost,2) - 1;
 %% Bernstein Algorithm
 [bernstein_cost,bernstein_constraint,cons_length] = setup_problem_bernstein(raw_cost,raw_constraints);
 bernstein_start_t = tic;
-[bernstein_opt,bernstein_apex_memory,bernstein_accuracy] = bernstein(bernstein_cost,bernstein_constraint,cons_length,P7_equalites',[3]);
+[bernstein_opt,bernstein_apex_memory,bernstein_accuracy] = PCBA(bernstein_cost,bernstein_constraint,cons_length,P7_equalites',[3]);
 bernstein_time = toc(bernstein_start_t);
 if bernstein_opt == -12345
     bernstein_exitflag = -1;
