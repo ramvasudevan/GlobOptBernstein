@@ -252,10 +252,10 @@ public:
 
 	/*
 	number of patches remained
-	We record the apex of the number of patches during the optimization to observe the performance of the algorithm in term of memory usage
+	We record the number of patches during the optimization to observe the performance of the algorithm in term of memory usage
 	*/
 	uint32_t numUnit;
-	uint32_t apex_numUnit;
+	uint32_t* numUnit_array;
 
 	/*
 	the lower bound of a Bernstein patch

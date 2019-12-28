@@ -10,8 +10,9 @@ BC::BC(poly* opt_in, uint8_t numCons_in, poly* cons_in, uint8_t numEqus_in, poly
 	equs = equs_in;
 	numEqus = numEqus_in;
 	numUnit = 1;
-	apex_numUnit = 1;
 	numDimension = opt_in->numDimension;
+	numUnit_array = new uint32_t[2 * MAX_ITER_NUM * numDimension];
+	memset(numUnit_array, 0, 2 * MAX_ITER_NUM * numDimension * sizeof(uint32_t));
 
 	if (numDimension == 2) {
 		MAX_UNIT_NUM = twod_MAX_UNIT_NUM;
@@ -260,6 +261,8 @@ BC::BC(poly* opt_in, uint8_t numCons_in, poly* cons_in, uint8_t numEqus_in, poly
 }
 
 BC::~BC() {
+	delete[] numUnit_array;
+
 	delete[] opt_degree;
 
 	if (numCons > 0) delete[] con_degree;
@@ -1507,12 +1510,13 @@ int BC::solve(bool debugMode, bool verboseMode) {
 
 			if (verboseMode) mexPrintf("Start iteration %d dim %d\n", iter, dim);
 			dilation(dim);
-			apex_numUnit = numUnit > apex_numUnit ? numUnit : apex_numUnit;
+			numUnit_array[((iter - 1) * numDimension + dim) * 2] = numUnit;
 			int_iter[dim]++;
 			if (verboseMode) mexPrintf("Dilation patch number: %d\n", numUnit);
 			findFlag();
 			if (debugMode) debug_print();
 			eliminate();
+			numUnit_array[((iter - 1) * numDimension + dim) * 2 + 1] = numUnit;
 
 			if (verboseMode) mexPrintf("Final patch number: %d\nEstimated Minimum: %.8f\nEstimated Bound: %.8f\n", numUnit, estiMin, estimated_accuracy);
 			if (debugMode) debug_print();

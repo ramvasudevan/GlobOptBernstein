@@ -56,24 +56,25 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 	if (ba_exitflag != -12345)
 	{
 		plhs[0] = mxCreateNumericMatrix((mwSize)b.numDimension, 1, mxDOUBLE_CLASS, mxREAL);
-		double* output = mxGetPr(plhs[0]);
-		for (int dim = 0; dim < b.numDimension; dim++)
-		{
+		double* output = (double*)mxGetData(plhs[0]);
+		for (int dim = 0; dim < b.numDimension; dim++) {
 			output[dim] = (double)(b.final_result[dim]);
 		}
 	}
 	else
 	{
 		plhs[0] = mxCreateNumericMatrix(1, 1, mxDOUBLE_CLASS, mxREAL);
-		double* output = mxGetPr(plhs[0]);
+		double* output = (double*)mxGetData(plhs[0]);
 		output[0] = (double)ba_exitflag;
 	}
 
-	plhs[1] = mxCreateNumericMatrix(1, 1, mxDOUBLE_CLASS, mxREAL);
-	double* output_2 = mxGetPr(plhs[1]);
-	output_2[0] = (double)b.apex_numUnit;
+	plhs[1] = mxCreateNumericMatrix(2 * MAX_ITER_NUM * b.numDimension, 1, mxUINT32_CLASS, mxREAL);
+	uint32_t* output_2 = (uint32_t*)mxGetData(plhs[1]);
+	for(uint32_t i = 0; i < 2 * MAX_ITER_NUM * b.numDimension; i++){
+		output_2[i] = (double)b.numUnit_array[i];
+	}
 
 	plhs[2] = mxCreateNumericMatrix(1, 1, mxDOUBLE_CLASS, mxREAL);
-	double* output_3 = mxGetPr(plhs[2]);
+	double* output_3 = (double*)mxGetData(plhs[2]);
 	output_3[0] = (double)b.target_accuracy;
 }
