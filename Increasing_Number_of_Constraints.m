@@ -20,7 +20,7 @@ fmincon_value_set = nan(fmincon_num,total_steps);
 fmincon_exit_flag = nan(fmincon_num,total_steps); % 1 means successful, 0 means not
 bernstein_time_set = nan(total_steps,1);
 bernstein_value_set = nan(total_steps,1);
-bernstein_apex_mem_set = nan(total_steps,1);
+bernstein_mem_set = nan(total_steps,1);
 
 for i = 1:total_steps
     clc;
@@ -31,10 +31,10 @@ for i = 1:total_steps
     %% Bernstein Algorithm
     [bernstein_cost,bernstein_constraint,cons_length] = setup_problem_bernstein(raw_cost,raw_constraints);
     bernstein_start_t = tic;
-    [bernstein_opt,bernstein_apex_memory,bernstein_accuracy] = PCBA(bernstein_cost,bernstein_constraint,cons_length,0,0);
+    [bernstein_opt,bernstein_memory,bernstein_accuracy] = PCBA(bernstein_cost,bernstein_constraint,cons_length,0,0);
     bernstein_time = toc(bernstein_start_t);
     bernstein_time_set(i) = bernstein_time;
-    bernstein_apex_mem_set(i) = bernstein_apex_memory;
+    bernstein_mem_set(i) = bernstein_memory;
     if bernstein_opt == -12345
         bernstein_exitflag = -1;
     else
@@ -92,7 +92,7 @@ infos.fmincon_value_set = fmincon_value_set;
 infos.fmincon_exit_flag = fmincon_exit_flag;
 infos.bernstein_time_set = bernstein_time_set;
 infos.bernstein_value_set = bernstein_value_set;
-infos.bernstein_apex_mem_set = bernstein_apex_mem_set;
+infos.bernstein_mem_set = bernstein_mem_set;
 
 %% Lasserre
 Lasserre_d_choice = [3,4,2,4,2,2,2,3,2,2];
@@ -141,4 +141,4 @@ infos.Lasserre_time_set = Lasserre_time_set;
 infos.Lasserre_value_set = Lasserre_value_set;
 
 %% save the data
-% save(['Increasing_Number_of_Constraints/more_',num2str(problem_index),'_info.mat'],'infos');
+save(['Increasing_Number_of_Constraints/more_',num2str(problem_index),'_info.mat'],'infos');

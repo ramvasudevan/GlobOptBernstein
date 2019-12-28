@@ -7,7 +7,7 @@
 
 %% setup the problem
 clear; clc;
-problem_index = 3;
+problem_index = 1;
 % the true optimal value (or the best we found) for each problem
 ground_truth = [-5.5080132636,...
                 -6961.8138816446,...
@@ -22,7 +22,7 @@ numDimension = size(raw_cost,2) - 1;
 %% Bernstein Algorithm
 [bernstein_cost,bernstein_constraint,cons_length] = setup_problem_bernstein(raw_cost,raw_constraints);
 bernstein_start_t = tic;
-[bernstein_opt,bernstein_apex_memory,bernstein_accuracy] = PCBA(bernstein_cost,bernstein_constraint,cons_length,0,0);
+[bernstein_opt,bernstein_memory,bernstein_accuracy] = PCBA(bernstein_cost,bernstein_constraint,cons_length,0,0);
 bernstein_time = toc(bernstein_start_t);
 if bernstein_opt == -12345
     bernstein_exitflag = -1;
@@ -117,7 +117,7 @@ infos.fmincon_value_set = fmincon_value_set;
 infos.fmincon_exit_flag = fmincon_exit_flag;
 infos.bernstein_time = bernstein_time;
 infos.bernstein_value = bernstein_value;
-infos.bernstein_apex_mem = bernstein_apex_memory;
+infos.bernstein_mem = bernstein_memory;
 infos.bernstein_accuracy = bernstein_accuracy;
 infos.Lasserre_time = Lasserre_time;
 infos.Lasserre_value = Lasserre_value;
