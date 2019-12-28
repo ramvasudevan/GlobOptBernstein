@@ -12,7 +12,7 @@
 problem_index = 4 ;
 
 % whether or not to save the output
-save_pdf_flag = false ;
+save_pdf_flag = true ;
 
 %% automated from here
 % load data
@@ -55,11 +55,11 @@ h_subd = plot(plot_subd_values,bernstein_memory(subd_indices),'b.','MarkerSize',
 h_elim = plot(plot_elim_values,bernstein_memory(elim_indices),'r.','MarkerSize',12) ;
 
 % add x ticks for every iteration
-xticks(1:num_iter)
+xticks(1:2:num_iter)
 xtickangle(45)
 
 % add legend
-legend([h_subd h_elim],'Subdivision','Elimination','Location','NorthWest')
+legend([h_subd h_elim],'Subdivision','Elimination')
 
 % label plot
 xlabel('Iteration')
@@ -68,7 +68,7 @@ grid on
 set(gca,'FontSize',14)
 
 % set plot size
-set(gcf,'Position',[1000 800 873 291])
+set(gcf,'Position',[1000 800 600 400])
 
 %% save figure
 if save_pdf_flag
