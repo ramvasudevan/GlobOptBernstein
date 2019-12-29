@@ -3,9 +3,9 @@
 % the list) versus the number of iterations of PCBA for each of the 8
 % benchmark problems.
 %
-% Author: Shreyas Kousik
+% Author: Shreyas Kousik and Bohao Zhang
 % Created: 28 Dec 2019
-% Updated: -
+% Updated: 29 Dec 2019
 %
 %% user parameters
 % which problem to plot
@@ -27,8 +27,20 @@ degrees = max([bernstein_cost(1:dimension,:),bernstein_constraint(1:dimension,:)
 bernstein_N_patches = bernstein_memory ;
 
 % (over)approximate the memory used
-memory_per_patch = prod(degrees + 1) * 4 ; % 4 bytes per float (single)
-bernstein_memory = memory_per_patch.*bernstein_N_patches./1024 ; % in kilobytes
+N_cons = length(cons_length) ; % N_cons + 1 is # of polynomials represented by items in list
+memory_per_item = (N_cons + 1) * prod(degrees + 1) * 4 ; % 4 bytes per float (single)
+bernstein_memory = memory_per_item.*bernstein_N_patches ; % in bytes
+
+% get mem usage in kB or mB
+mem_type = 'kB' ;
+memory_per_item = memory_per_item ./ 1024 ;
+bernstein_memory = bernstein_memory ./1024 ;
+
+if max(bernstein_memory) > 1000
+    mem_type = 'MB' ;
+    memory_per_item = memory_per_item ./ 1024 ;
+    bernstein_memory = bernstein_memory ./1024 ;
+end
 
 % get the number of iterations (each entry in bernstein_memory is the
 % number of patches either from subdivision or elimination, and subdivision
@@ -76,9 +88,9 @@ yt_left = yticks ;
 % plot memory usage on right
 yyaxis right
 % set(gca,'LineColor','k')
-y_left_max = max(yt_left)*memory_per_patch./1024 ;
+y_left_max = max(yt_left)*memory_per_item ;
 h_mem = plot([0 1],[0,y_left_max],'LineStyle', 'none') ; % invisible plop
-ylabel('Approximate Memory Used [kB]')
+ylabel(['Approximate Memory Used [',mem_type,']'])
 set(gca,'Color','none')
 
 % add legend
