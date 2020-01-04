@@ -19,7 +19,7 @@
 %
 %% user parameters
 % which problem to print
-problem_index = 1 ; % pick an integer from 1 through 9
+problem_index = 8 ; % pick an integer from 1 through 9
 
 % colors
 pcba_color = [0 0 1] ;
@@ -49,7 +49,7 @@ total_steps = 20;
 step = 10;
 
 % load data
-load(['Increasing_Number_of_Constraints/more_',num2str(problem_index),'_info.mat']);
+load(['more_',num2str(problem_index),'_info.mat']);
 
 % extract results and get error in optimal value
 pcba_result = infos.bernstein_value_set - ground_truth(problem_index+1);
@@ -115,6 +115,22 @@ set(gca,'FontSize',14)
 h_fmincon = findall(f2,'tag','Box') ;
 legend([h_pcba,h_bsos,h_fmincon(1)],{'PCBA','BSOS','fmincon'},'Location','northwest')
 
+%% memory analysis
+bernstein_apex_mem = infos.bernstein_apex_mem_set;
+
+% set up figure
+f4 = figure(3) ; clf ; hold on ;
+
+% plot pcba memory usage
+plot(con_x,bernstein_apex_mem,'x','Color',pcba_color,'MarkerSize',9,'LineWidth',2);
+
+% labels
+xlabel('number of constraints');
+ylabel('number of patches]');
+title('number of patches vs. number of constraints') ;
+xtickangle(45)
+set(gca,'FontSize',14)
+
 %% save output
 if save_pdfs_flag
     % size the first figure correctly
@@ -126,10 +142,15 @@ if save_pdfs_flag
     set(f2,'Units','Inches');
     pos = get(f2,'Position');
     set(f2,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
-
+    
+    % size the third figure correctly
+    set(f3,'Units','Inches');
+    pos = get(f3,'Position');
+    set(f3,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
     % print
     print(f1,'increasing_constraints_error.pdf','-dpdf','-r0')
     print(f2,'increasing_constraints_time.pdf','-dpdf','-r0')
+    print(f3,'increasing_constraints_pcba_memory.pdf','-dpdf','-r0')
 end
 
 %% helper function
