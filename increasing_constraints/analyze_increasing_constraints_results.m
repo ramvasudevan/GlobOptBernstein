@@ -119,7 +119,7 @@ legend([h_pcba,h_bsos,h_fmincon(1)],{'PCBA','BSOS','fmincon'},'Location','northw
 bernstein_apex_mem = infos.bernstein_apex_mem_set;
 
 % set up figure
-f4 = figure(3) ; clf ; hold on ;
+f3 = figure(3) ; clf ; hold on ;
 
 % plot pcba memory usage
 plot(con_x,bernstein_apex_mem,'x','Color',pcba_color,'MarkerSize',9,'LineWidth',2);
