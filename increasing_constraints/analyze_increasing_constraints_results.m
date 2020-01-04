@@ -15,11 +15,11 @@
 %
 % Authors: Bohao Zhang and Shreyas Kousik
 % Created: Summer 2019
-% Updated: 10 Dec 2019
+% Updated: 4 Jan 2020
 %
 %% user parameters
 % which problem to print
-problem_index = 2 ; % pick an integer from 1 through 9
+problem_index = 1 ; % pick an integer from 1 through 9
 
 % colors
 pcba_color = [0 0 1] ;
@@ -27,7 +27,7 @@ bsos_color = [0 191 40]./255 ;
 fmincon_color = [1 0 0] ;
 
 % whether or not to save the output
-save_pdfs_flag = true ;
+save_pdfs_flag = false ;
 
 %% optimal value analysis (automated from here)
 % true optimal value for each cost function

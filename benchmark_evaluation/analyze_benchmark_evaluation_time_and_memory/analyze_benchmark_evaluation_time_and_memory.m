@@ -5,14 +5,14 @@
 %
 % Author: Shreyas Kousik and Bohao Zhang
 % Created: 28 Dec 2019
-% Updated: 29 Dec 2019
+% Updated: 4 Jan 2020
 %
 %% user parameters
 % which problem to plot
-problem_index = 4 ;
+problem_index = 1 ;
 
 % whether or not to save the output
-save_pdf_flag = true ;
+save_pdf_flag = false ;
 
 %% automated from here
 % load data
@@ -48,7 +48,7 @@ end
 % is 2*d; the first "0" entry in bernstein_memory marks the iteration
 % where the problem was solved to the specified tolerances)
 problem_solved_index = find(bernstein_N_patches == 0,1,'first') + 1 ;
-num_iter = (problem_solved_index) / (2*dimension) ;
+num_iter = ceil((problem_solved_index) / (2*dimension)) ;
 
 % get indices for all steps
 all_indices = 1:problem_solved_index ;
@@ -64,6 +64,15 @@ subd_indices(elim_indices) = [] ;
 plot_subd_values = subd_indices ./ (2*dimension) ;
 plot_elim_values = elim_indices ./ (2*dimension) ;
 
+%% display problem info
+disp(' ')
+disp(['--- P',num2str(problem_index),' STATS ---'])
+disp(['Decision variable dimension: ',num2str(dimension)])
+disp(['Iterations used: ',num2str(num_iter)])
+disp(['Max number of patches: ',num2str(max(bernstein_N_patches))])
+disp(['Max GPU memory used: ',num2str(max(bernstein_memory)),' ',mem_type,' (approx)'])
+disp(' ')
+
 %% plot
 close all ; 
 f1 = figure(1) ; clf ; hold on ;
@@ -77,7 +86,7 @@ h_elim = plot(plot_elim_values,bernstein_N_patches(elim_indices),'r.','MarkerSiz
 % label left side
 ylabel('Number of Patches')
 
-% add x ticks for every iteration
+% add x ticks for iterations
 grid on
 xticks(1:2:num_iter)
 xtickangle(45)
