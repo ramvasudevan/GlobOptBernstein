@@ -49,7 +49,7 @@ total_steps = 20;
 step = 10;
 
 % load data
-load(['Increasing_Number_of_Constraints/more_',num2str(problem_index),'_info.mat']);
+load(['more_',num2str(problem_index),'_info.mat']);
 
 % extract results and get error in optimal value
 pcba_result = infos.bernstein_value_set - ground_truth(problem_index+1);
