@@ -48,7 +48,7 @@ h_bounds = [-3 3] ;
 plot_position = [0 0 750 750] ;
 
 % save figure output
-save_pdf_flag = true ;
+save_pdf_flag = false ;
 save_pdf_filename = ['pcba_demo_iteration_',num2str(plot_iterations(end)),'.pdf'] ;
 
 %% automated from here

@@ -9,10 +9,10 @@
 %
 %% user parameters
 % which problem to plot
-problem_index = 5 ;
+problem_index = 4 ;
 
 % whether or not to save the output
-save_pdf_flag = false ;
+save_pdf_flag = true ;
 
 % the maximum number of iteration used in the program
 default_max_iteration = 28;
@@ -39,12 +39,12 @@ bernstein_memory = memory_per_item.*bernstein_N_patches ; % in bytes
 % get mem usage in kB or mB
 mem_type = 'kB' ;
 memory_per_item = memory_per_item ./ 1024 ;
-bernstein_memory = bernstein_memory ./1024 ;
+bernstein_memory = bernstein_memory ./ 1024 ;
 
 if max(bernstein_memory) > 1000
     mem_type = 'MB' ;
     memory_per_item = memory_per_item ./ 1024 ;
-    bernstein_memory = bernstein_memory ./1024 ;
+    bernstein_memory = bernstein_memory ./ 1024 ;
 end
 
 % get the number of iterations (each entry in bernstein_memory is the
@@ -53,7 +53,7 @@ end
 % is 2*d; the first "0" entry in bernstein_memory marks the iteration
 % where the problem was solved to the specified tolerances)
 problem_solved_index = find(bernstein_N_patches == 0,1,'first') + 1 ;
-if length(problem_solved_index) == 0
+if isempty(problem_solved_index)
     problem_solved_index = default_max_iteration * 2 * dimension;
 end
 num_iter = ceil((problem_solved_index) / (2*dimension)) ;
@@ -92,7 +92,7 @@ h_subd = plot(plot_subd_values,bernstein_N_patches(subd_indices),'b.','MarkerSiz
 h_elim = plot(plot_elim_values,bernstein_N_patches(elim_indices),'r.','MarkerSize',12) ;
 
 % label left side
-ylabel('Number of Patches')
+ylabel('number of patches')
 
 % add x ticks for iterations
 grid on
@@ -107,14 +107,17 @@ yyaxis right
 % set(gca,'LineColor','k')
 y_left_max = max(yt_left)*memory_per_item ;
 h_mem = plot([0 1],[0,y_left_max],'LineStyle', 'none') ; % invisible plop
-ylabel(['Approximate Memory Used [',mem_type,']'])
+ylabel(['approximate memory used [',mem_type,']'])
 set(gca,'Color','none')
 
 % add legend
-legend([h_subd h_elim],'Subdivision','Elimination')
+legend([h_subd h_elim],'subdivision','elimination')
+
+% add title
+title(['benchmark P',num2str(problem_index),' patches / memory usage'])
 
 % label plot
-xlabel('Iteration')
+xlabel('iteration')
 set(gca,'FontSize',14)
 
 % set plot size

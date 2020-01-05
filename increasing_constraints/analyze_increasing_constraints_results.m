@@ -16,10 +16,10 @@
 % Authors: Bohao Zhang and Shreyas Kousik
 % Created: Summer 2019
 % Updated: 4 Jan 2020
-%
+clc ; close all ;
 %% user parameters
 % which problem to print
-problem_index = 8 ; % pick an integer from 1 through 9
+problem_index = 2 ; % pick an integer from 1 through 9
 
 % colors
 pcba_color = [0 0 1] ;
@@ -29,7 +29,12 @@ fmincon_color = [1 0 0] ;
 % whether or not to save the output
 save_pdfs_flag = false ;
 
-%% optimal value analysis (automated from here)
+%% data for reference (automated from here)
+% names of problems
+problem_name = {'El-Attar-Vidyasagar-Dutta','Powell','Wood',...
+    'Dixon-Price 2-D','Dixon-Price 3-D','Dixon-Price 4-D',...
+    'Beale','Bukin02','Deckkers-Aarts'} ;
+
 % true optimal value for each cost function
 ground_truth = [0;
                 0;
@@ -42,6 +47,14 @@ ground_truth = [0;
                 0;
                 0];
 
+% dimension and degree of problems
+problem_dimension = [2 2 4 2 3 4 2 2 2] ;
+problem_degree = [6 4 4 4 4 4 8 2 8] ;
+
+% degree of constraints
+constraint_degree = 2 ;
+            
+%% optimal value analysis (automated from here)
 % total number of x ticks
 total_steps = 20;
 
@@ -72,9 +85,9 @@ plot(1:total_steps,pcba_result,'x','Color',pcba_color,'MarkerSize',9,'LineWidth'
 plot(1:total_steps,bsos_result,'o','Color',bsos_color,'MarkerSize',10,'LineWidth',2) ;
 
 % labels
-xlabel('number of constraints');
-ylabel('(solver output) - (true optimum)');
-title('solution error vs. number of constraints');
+xlabel('number of constraints \alpha','interpreter','tex');
+ylabel('(solver output) - (true optimum)','interpreter','tex');
+title(['''',problem_name{problem_index}, ''' solution error vs. number of constraints'],'interpreter','tex')
 xtickangle(45)
 set(gca,'FontSize',14)
 
@@ -105,9 +118,9 @@ loww = log10(min(min(min(fmincon_time)),min(pcba_time)));
 axis([0 total_steps+1 loww upp+0.5]);
 
 % labels
-xlabel('number of constraints');
-ylabel('solve time [log_{10}(s)]');
-title('solve time vs. number of constraints') ;
+xlabel('number of constraints \alpha','interpreter','tex');
+ylabel('solve time [log_{10}(s)]','interpreter','tex');
+title(['''',problem_name{problem_index}, ''' solve time vs. number of constraints']) ;
 xtickangle(45)
 set(gca,'FontSize',14)
 
@@ -116,19 +129,48 @@ h_fmincon = findall(f2,'tag','Box') ;
 legend([h_pcba,h_bsos,h_fmincon(1)],{'PCBA','BSOS','fmincon'},'Location','northwest')
 
 %% memory analysis
-bernstein_apex_mem = infos.bernstein_apex_mem_set;
+% get number of patches per number of constraints
+number_of_items_per_number_of_constraints = infos.bernstein_apex_mem_set ;
+
+% get memory per item in the list
+memory_per_item = ((problem_degree(problem_index) + 1) + (con_x * (constraint_degree + 1))) * 4 ; % [B] (4 B / single)
+
+% peak memory usage
+peak_memory_usage = number_of_items_per_number_of_constraints(:) .* memory_per_item(:) ./ 1024 ; % [kB]
+mem_type = 'kB' ;
+if max(peak_memory_usage) > 1024
+    peak_memory_usage = peak_memory_usage ./ 1024 ;
+    mem_type = 'MB' ;
+end
 
 % set up figure
-f3 = figure(3) ; clf ; hold on ;
+f3 = figure(3) ; clf ;
 
-% plot pcba memory usage
-plot(con_x,bernstein_apex_mem,'x','Color',pcba_color,'MarkerSize',9,'LineWidth',2);
+% plot pcba number of patches
+plot(con_x,number_of_items_per_number_of_constraints,'x','Color',pcba_color,'MarkerSize',9,'LineWidth',2);
+ylabel('number of items');
 
 % labels
-xlabel('number of constraints');
-ylabel('number of patches]');
-title('number of patches vs. number of constraints') ;
+xlabel('number of constraints \alpha','interpreter','tex');
+title(['''',problem_name{problem_index}, ''' number of items vs. number of constraints']) ;
+xticks(con_x)
 xtickangle(45)
+grid on ;
+set(gca,'FontSize',14)
+
+% set up figure for memory usage
+f4 = figure(4) ; clf ;
+
+% plot peak memory usage
+plot(con_x,peak_memory_usage,'x','Color',pcba_color,'MarkerSize',9,'LineWidth',2);
+
+% labels
+title(['''',problem_name{problem_index}, ''' peak memory usage vs. number of constraints']) ;
+ylabel(['peak memory usage [',mem_type,']'])
+xlabel('number of constraints \alpha','interpreter','tex');
+xticks(con_x)
+xtickangle(45)
+grid on ;
 set(gca,'FontSize',14)
 
 %% save output
@@ -147,10 +189,17 @@ if save_pdfs_flag
     set(f3,'Units','Inches');
     pos = get(f3,'Position');
     set(f3,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
+    
+    % size the fourth figure correctly
+    set(f4,'Units','Inches');
+    pos = get(f4,'Position');
+    set(f4,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
+    
     % print
     print(f1,'increasing_constraints_error.pdf','-dpdf','-r0')
     print(f2,'increasing_constraints_time.pdf','-dpdf','-r0')
-    print(f3,'increasing_constraints_pcba_memory.pdf','-dpdf','-r0')
+    print(f3,'increasing_constraints_pcba_number_of_items.pdf','-dpdf','-r0')
+    print(f4,'increasing_constraints_pcba_memory_usage.pdf','-dpdf','-r0')
 end
 
 %% helper function
