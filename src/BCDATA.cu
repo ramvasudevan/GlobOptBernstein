@@ -11,8 +11,7 @@ BC::BC(poly* opt_in, uint8_t numCons_in, poly* cons_in, uint8_t numEqus_in, poly
 	numEqus = numEqus_in;
 	numUnit = 1;
 	numDimension = opt_in->numDimension;
-	numUnit_array = new uint32_t[2 * MAX_ITER_NUM * numDimension];
-	memset(numUnit_array, 0, 2 * MAX_ITER_NUM * numDimension * sizeof(uint32_t));
+	numUnit_array = nullptr;
 
 	if (numDimension == 2) {
 		MAX_UNIT_NUM = twod_MAX_UNIT_NUM;
@@ -1259,6 +1258,7 @@ void BC::eliminate() {
 					elimPos[elimNum++] = i;
 				}
 				else {
+					// using derivative in PCBA
 					/*
 					if (dFlag[i] == false && intFlag[i] == 2) {
 						elimPos[elimNum++] = i;
@@ -1489,7 +1489,7 @@ __global__ void quadBCfinalResultKernel(float* target_intervalRes, uint32_t* int
 	}
 }
 
-int BC::solve(bool debugMode, bool verboseMode) {
+int BC::solve(bool debugMode, bool verboseMode, bool memoryRecordMode) {
 	int exitFlag = 1; // 1 means everything is fine, -12345 means infeasible, -54321 means too many boxes have been generated before stopping criteria could be satisfied, the current result may be inaccurate
 	last = false;
 
@@ -1497,6 +1497,11 @@ int BC::solve(bool debugMode, bool verboseMode) {
 
 	target_accuracy = (bdMax[0] - bdMin[0]) * STOPPING_CRITERIA;
 	mexPrintf("Target accuracy: %f\n", target_accuracy);
+
+	if (memoryRecordMode) {
+		numUnit_array = new uint32_t[2 * MAX_ITER_NUM * numDimension];
+		memset(numUnit_array, 0, 2 * MAX_ITER_NUM * numDimension * sizeof(uint32_t));
+	}
 
 	for (iter = 1; iter <= MAX_ITER_NUM; iter++) {
 		bool ifBreak = false;
@@ -1510,13 +1515,17 @@ int BC::solve(bool debugMode, bool verboseMode) {
 
 			if (verboseMode) mexPrintf("Start iteration %d dim %d\n", iter, dim);
 			dilation(dim);
-			numUnit_array[((iter - 1) * numDimension + dim) * 2] = numUnit;
+			if (memoryRecordMode) {
+				numUnit_array[((iter - 1) * numDimension + dim) * 2] = numUnit;
+			}
 			int_iter[dim]++;
 			if (verboseMode) mexPrintf("Dilation patch number: %d\n", numUnit);
 			findFlag();
 			if (debugMode) debug_print();
 			eliminate();
-			numUnit_array[((iter - 1) * numDimension + dim) * 2 + 1] = numUnit;
+			if (memoryRecordMode) {
+				numUnit_array[((iter - 1) * numDimension + dim) * 2 + 1] = numUnit;
+			}
 
 			if (verboseMode) mexPrintf("Final patch number: %d\nEstimated Minimum: %.8f\nEstimated Bound: %.8f\n", numUnit, estiMin, estimated_accuracy);
 			if (debugMode) debug_print();

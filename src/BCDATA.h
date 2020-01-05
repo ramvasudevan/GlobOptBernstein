@@ -29,7 +29,7 @@ All the information is promised to be stored in the same index in no matter whic
 #include "poly2BC.h"
 
 // maximum of iteration number, should NOT be larger than 32 since position info is stored in uint32_t
-#define MAX_ITER_NUM 30
+#define MAX_ITER_NUM 28
 
 // used for shared memory pre-allocation, the maximum size of a Bernstein patch
 #define MAX_UNIT_LENGTH 1000
@@ -114,18 +114,20 @@ public:
 
 	/*
 	REQUIRES:
-		debugMode   -> turn on to print the data on the screen at each iteration. 
-					   Note that you have to modify the constructor otherwise memory leak would take place!!!!!!!
-					   default: turn off
-		verboseMode -> print number of patches left at each iteration on the screen
-					   default: turn on
+		debugMode        -> turn on to print the data on the screen at each iteration. 
+					        Note that you have to modify the constructor otherwise memory leak would take place!!!!!!!
+					        default: turn off
+		verboseMode      -> print number of patches left at each iteration on the screen
+					        default: turn off
+		memoryRecordMode -> record the number of patches during every iteration
+					        default: turn off
 	EFFECT: the optimizer to call. put everything together as described in the paper. store the result into final_result
 	RETURN:
 		1      -> optimization successfully finished
 		-12345 -> the problem is infeasible
 		-54321 -> too much memory is needed. the optimizer didn't compplete all the iterations required in accuracy. A less precise result is given
 	*/
-	int solve(bool debugMode = false, bool verboseMode = true);
+	int solve(bool debugMode = false, bool verboseMode = false, bool memoryRecordMode = false);
 
 	/*
 	The maximum number of Benrstein units possible in the program. used for pre-allocating memory.

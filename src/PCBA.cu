@@ -3,17 +3,17 @@
 #include "BCDATA.h"
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
-	double* opt_data = mxGetPr(prhs[0]);
+	double* opt_data = (double*)mxGetData(prhs[0]);
 	uint16_t opt_m = (uint16_t)mxGetM(prhs[0]);
 	uint8_t opt_n = (uint8_t)mxGetN(prhs[0]);
 
 	poly opt(opt_m - 1, opt_n, opt_data);
 
-	double* con_data = mxGetPr(prhs[1]);
+	double* con_data = (double*)mxGetData(prhs[1]);
 	uint16_t con_m = (uint16_t)mxGetM(prhs[1]);
 	uint8_t con_n = (uint8_t)mxGetN(prhs[1]);
 
-	double* con_len = mxGetPr(prhs[2]);
+	double* con_len = (double*)mxGetData(prhs[2]);
 	uint16_t conNum = (uint16_t)mxGetM(prhs[2]);
 	double* con_data_shift = con_data;
 
@@ -21,13 +21,17 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 		conNum = 0;
 	}
 
-	double* equ_data = mxGetPr(prhs[3]);
+	double* equ_data = (double*)mxGetData(prhs[3]);
 	uint16_t equ_m = (uint16_t)mxGetM(prhs[3]);
 	uint8_t equ_n = (uint8_t)mxGetN(prhs[3]);
 
-	double* equ_len = mxGetPr(prhs[4]);
+	double* equ_len = (double*)mxGetData(prhs[4]);
 	uint16_t equNum = (uint16_t)mxGetM(prhs[4]);
 	double* equ_data_shift = equ_data;
+
+	uint32_t options = (uint32_t)(*(double*)mxGetData(prhs[5]));
+	bool verboseMode = options & 1;
+	bool memoryRecordMode = (options >> 1) & 1;
 
 	if (equNum == 1 && equ_len[0] == 0) {
 		equNum = 0;
@@ -50,9 +54,15 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 	}
 
 	BC b(&opt, conNum, cons.data(), equNum, equs.data());
-	int ba_exitflag = b.solve(false, false);
+	int ba_exitflag = b.solve(false, verboseMode, memoryRecordMode);
 
-	nlhs = 3;
+	if (memoryRecordMode) {
+		nlhs = 3;
+	}
+	else {
+		nlhs = 2;
+	}
+
 	if (ba_exitflag != -12345)
 	{
 		plhs[0] = mxCreateNumericMatrix((mwSize)b.numDimension, 1, mxDOUBLE_CLASS, mxREAL);
@@ -68,13 +78,15 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 		output[0] = (double)ba_exitflag;
 	}
 
-	plhs[1] = mxCreateNumericMatrix(2 * MAX_ITER_NUM * b.numDimension, 1, mxUINT32_CLASS, mxREAL);
-	uint32_t* output_2 = (uint32_t*)mxGetData(plhs[1]);
-	for(uint32_t i = 0; i < 2 * MAX_ITER_NUM * b.numDimension; i++){
-		output_2[i] = (double)b.numUnit_array[i];
-	}
+	plhs[1] = mxCreateNumericMatrix(1, 1, mxDOUBLE_CLASS, mxREAL);
+	double* output_2 = (double*)mxGetData(plhs[1]);
+	output_2[0] = (double)b.target_accuracy;
 
-	plhs[2] = mxCreateNumericMatrix(1, 1, mxDOUBLE_CLASS, mxREAL);
-	double* output_3 = (double*)mxGetData(plhs[2]);
-	output_3[0] = (double)b.target_accuracy;
+	if (memoryRecordMode) {
+		plhs[2] = mxCreateNumericMatrix(2 * MAX_ITER_NUM * b.numDimension, 1, mxUINT32_CLASS, mxREAL);
+		uint32_t* output_3 = (uint32_t*)mxGetData(plhs[2]);
+		for (uint32_t i = 0; i < 2 * MAX_ITER_NUM * b.numDimension; i++) {
+			output_3[i] = (double)b.numUnit_array[i];
+		}
+	}
 }

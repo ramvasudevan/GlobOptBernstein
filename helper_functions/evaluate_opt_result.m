@@ -5,7 +5,7 @@ difference = [];
 feasibility = 1;
 for i = 1:length(constraints)
     cons_value = evaluate_function(cell2mat(constraints(i)),input);
-    if cons_value > 1 || cons_value < 0
+    if cons_value > 0
         feasibility = 0;
         violate_terms = [violate_terms,i];
         if(cons_value > 1)
@@ -15,9 +15,5 @@ for i = 1:length(constraints)
         end
     end
 end
-if feasibility == 1
-    value = evaluate_function(cost,input);
-else
-    value = NaN;
-end
+value = evaluate_function(cost,input);
 end

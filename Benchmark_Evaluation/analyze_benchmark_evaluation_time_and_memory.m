@@ -9,22 +9,27 @@
 %
 %% user parameters
 % which problem to plot
-problem_index = 1 ;
+problem_index = 5 ;
 
 % whether or not to save the output
 save_pdf_flag = false ;
 
+% the maximum number of iteration used in the program
+default_max_iteration = 28;
+
 %% automated from here
 % load data
-load(['P',num2str(problem_index),'_time_and_memory_info.mat'])
+load(['P',num2str(problem_index),'_infos.mat'])
 
 %% process data
 % get the problem dimension and degree in each dimension ;
+eval(strcat('[raw_cost,raw_constraints] = setup_problem_matrix_P',num2str(problem_index),'();'));
+[bernstein_cost,bernstein_constraint,cons_length] = setup_problem_bernstein(raw_cost,raw_constraints);
 dimension = size(bernstein_cost,1) - 1 ;
 degrees = max([bernstein_cost(1:dimension,:),bernstein_constraint(1:dimension,:)],[],2) ;
 
 % relabel the "bernstein memory" variable
-bernstein_N_patches = bernstein_memory ;
+bernstein_N_patches = infos.bernstein_mem ;
 
 % (over)approximate the memory used
 N_cons = length(cons_length) ; % N_cons + 1 is # of polynomials represented by items in list
@@ -48,6 +53,9 @@ end
 % is 2*d; the first "0" entry in bernstein_memory marks the iteration
 % where the problem was solved to the specified tolerances)
 problem_solved_index = find(bernstein_N_patches == 0,1,'first') + 1 ;
+if length(problem_solved_index) == 0
+    problem_solved_index = default_max_iteration * 2 * dimension;
+end
 num_iter = ceil((problem_solved_index) / (2*dimension)) ;
 
 % get indices for all steps

@@ -7,13 +7,14 @@
 
 %% setup the problem
 clear; clc;
-problem_index = 1;
+problem_index = 8;
 % the true optimal value (or the best we found) for each problem
 ground_truth = [-5.5080132636,...
                 -6961.8138816446,...
                 3.0000011115,...
                 -4,...
-                0,6395.5078,...
+                0,...
+                6395.5078,...
                 1.0898639714,...
                 42.4440570797];
 eval(strcat('[raw_cost,raw_constraints] = setup_problem_matrix_P',num2str(problem_index),'();'));
@@ -21,9 +22,26 @@ numDimension = size(raw_cost,2) - 1;
 
 %% Bernstein Algorithm
 [bernstein_cost,bernstein_constraint,cons_length] = setup_problem_bernstein(raw_cost,raw_constraints);
-bernstein_start_t = tic;
-[bernstein_opt,bernstein_memory,bernstein_accuracy] = PCBA(bernstein_cost,bernstein_constraint,cons_length,0,0);
-bernstein_time = toc(bernstein_start_t);
+
+% run for memory analysis
+verboseMode = 0;
+memoryRecordMode = 1;
+pcba_options = memoryRecordMode * 2 + verboseMode;
+[bernstein_opt,bernstein_accuracy,bernstein_memory] = PCBA(bernstein_cost,bernstein_constraint,cons_length,0,0,pcba_options);
+
+% run another 20 times to get an average time
+pcba_num = 20;
+verboseMode = 0;
+memoryRecordMode = 0;
+pcba_options = memoryRecordMode * 2 + verboseMode;
+bernstein_time_set = zeros(pcba_num,1);
+for num = 1:pcba_num
+    bernstein_start_t = tic;
+    [bernstein_opt,bernstein_accuracy] = PCBA(bernstein_cost,bernstein_constraint,cons_length,0,0,pcba_options);
+    bernstein_time_set(num) = toc(bernstein_start_t);
+end
+bernstein_time = median(bernstein_time_set);
+
 if bernstein_opt == -12345
     bernstein_exitflag = -1;
 else
