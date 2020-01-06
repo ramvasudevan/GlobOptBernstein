@@ -7,7 +7,7 @@
 
 %% setup the problem
 clear; clc;
-problem_index = 1;
+problem_index = 6;
 % the true optimal value (or the best we found) for each problem
 ground_truth = [-5.5080132636,...
                 -6961.8138816446,...
@@ -146,18 +146,18 @@ infos.Lasserre_time_set = Lasserre_time_set;
 infos.Lasserre_value = Lasserre_value;
 infos.Lasserre_d = Lasserre_d;
 infos.Lasserre_k = Lasserre_k;
-% save(strcat('Benchmark_Evaluation/P',num2str(problem_index),'_infos.mat'),'infos');
+save(strcat('Benchmark_Evaluation/P',num2str(problem_index),'_infos.mat'),'infos');
 
 %% data analysis
-disp('PCBA time:')
+disp('PCBA time median:')
 disp(median(infos.bernstein_time_set));
 disp('PCBA error:')
 disp(infos.bernstein_value - ground_truth(problem_index));
 disp('PCBA stopping crtieria:')
 disp(infos.bernstein_accuracy);
 disp(' ')
-disp('BSOS time:')
-disp(median(infos.Lasserre_time));
+disp('BSOS time median:')
+disp(median(infos.Lasserre_time_set));
 disp('BSOS error:')
 disp(infos.Lasserre_value - ground_truth(problem_index));
 disp('BSOS d & k choice:')
