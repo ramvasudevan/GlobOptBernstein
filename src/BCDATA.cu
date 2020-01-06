@@ -1544,8 +1544,10 @@ int BC::solve(bool debugMode, bool verboseMode, bool memoryRecordMode) {
 			}
 		}
 		
-		mexPrintf("Finish Iteration %d\n", iter);
-		mexPrintf("Final Patch number: %d\nEstimated Minimum: %.8f\n", numUnit, estiMin);
+		if (verboseMode){
+			mexPrintf("Finish Iteration %d\n", iter);
+			mexPrintf("Final Patch number: %d\nEstimated Minimum: %.8f\n", numUnit, estiMin);
+		}
 
 		if (ifBreak) break;
 	}
