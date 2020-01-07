@@ -33,7 +33,7 @@ bernstein_N_patches = infos.bernstein_mem ;
 
 % (over)approximate the memory used
 N_cons = length(cons_length) ; % N_cons + 1 is # of polynomials represented by items in list
-memory_per_item = (N_cons + 1) * prod(degrees + 1) * 4 ; % 4 bytes per float (single)
+memory_per_item = get_memory_per_item(bernstein_cost,bernstein_constraint,N_cons) ;
 bernstein_memory = memory_per_item.*bernstein_N_patches ; % in bytes
 
 % get mem usage in kB or mB

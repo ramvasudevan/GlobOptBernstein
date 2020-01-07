@@ -61,8 +61,9 @@ total_steps = 20;
 % number of constraints increase between x ticks
 step = 10;
 
-% load data
-load(['more_',num2str(problem_index),'_info.mat']);
+% load problem data
+load(['more_',num2str(problem_index),'_info.mat']); % info about problem
+load(['more_',num2str(problem_index),'.mat']); % problem cost, constraints, etc
 
 % extract results and get error in optimal value
 pcba_result = infos.bernstein_value_set - ground_truth(problem_index+1);
@@ -133,7 +134,17 @@ legend([h_pcba,h_bsos,h_fmincon(1)],{'PCBA','BSOS','fmincon'},'Location','northw
 number_of_items_per_number_of_constraints = infos.bernstein_apex_mem_set ;
 
 % get memory per item in the list
-memory_per_item = ((problem_degree(problem_index) + 1) + (con_x * (constraint_degree + 1))) * 4 ; % [B] (4 B / single)
+cost = more_problem.cost' ;
+memory_per_item = zeros(1,total_steps) ;
+for idx = 1:total_steps
+    % get constraints 
+    cons_cell = more_problem.constraints(1:10*idx) ;
+    cons = cell2mat(cons_cell)' ;
+    N_cons = 10*idx ;
+    
+    % get memory per item
+    memory_per_item(idx) = get_memory_per_item(cost,cons,N_cons) ;
+end
 
 % peak memory usage
 peak_memory_usage = number_of_items_per_number_of_constraints(:) .* memory_per_item(:) ./ 1024 ; % [kB]
