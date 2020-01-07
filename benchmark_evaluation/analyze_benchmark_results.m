@@ -5,14 +5,14 @@
 %
 % Author: Shreyas Kousik and Bohao Zhang
 % Created: 28 Dec 2019
-% Updated: 4 Jan 2020
+% Updated: 7 Jan 2020
 %
 %% user parameters
 % which problem to plot
 problem_index = 4 ;
 
 % whether or not to save the output
-save_pdf_flag = true ;
+save_pdf_flag = false ;
 
 % the maximum number of iteration used in the program
 default_max_iteration = 28;
@@ -56,7 +56,7 @@ problem_solved_index = find(bernstein_N_patches == 0,1,'first') + 1 ;
 if isempty(problem_solved_index)
     problem_solved_index = default_max_iteration * 2 * dimension;
 end
-num_iter = ceil((problem_solved_index) / (2*dimension)) ;
+num_iter = floor((problem_solved_index) / (2*dimension)) ;
 
 % get indices for all steps
 all_indices = 1:problem_solved_index ;
@@ -74,7 +74,7 @@ plot_elim_values = elim_indices ./ (2*dimension) ;
 
 %% display problem info
 disp(' ')
-disp(['--- P',num2str(problem_index),' STATS ---'])
+disp(['--- BENCHMARK P',num2str(problem_index),' STATS ---'])
 disp(['Decision variable dimension: ',num2str(dimension)])
 disp(['Iterations used: ',num2str(num_iter)])
 disp(['Max number of patches: ',num2str(max(bernstein_N_patches))])
