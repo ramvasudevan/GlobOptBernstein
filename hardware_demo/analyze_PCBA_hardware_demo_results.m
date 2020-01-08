@@ -121,7 +121,12 @@ set(gca,'FontSize',14)
 
 %% plot number of constraints per trial
 f2 = figure(2) ; clf ;
-histogram(num_cons)
+h = histogram(num_cons) ;
+
+% set the histogram ticks
+xticks(h.BinEdges)
+
+% labels etc.
 xlabel('number of constraints')
 ylabel('number of POPs')
 title('number of constraints per trial')
