@@ -48,7 +48,7 @@ h_bounds = [-3 3] ;
 plot_position = [0 0 750 750] ;
 
 % save figure output
-save_pdf_flag = false ;
+save_pdf_flag = true ;
 save_pdf_filename = ['pcba_demo_iteration_',num2str(plot_iterations(end)),'.pdf'] ;
 
 %% automated from here
@@ -186,7 +186,8 @@ for itr = 2:(N_iter+1)
     
     %% cutoff test
     % get feasible patches
-    eq_cons_log = (B_h_bounds(:,1) >= (-eeq)) & (B_h_bounds(:,2) <= eeq) ;
+    eq_cons_log = (B_h_bounds(:,1) >= (-eeq)) & (B_h_bounds(:,2) <= eeq) & ...
+        (B_h_bounds(:,1) <= 0) & (B_h_bounds(:,2) >= 0) ;
     ineq_cons_log = B_g_bounds(:,2) <= 0 ;
     feas_log = eq_cons_log & ineq_cons_log ;
     
@@ -195,7 +196,8 @@ for itr = 2:(N_iter+1)
     solution_estimate_all{itr} = solution_estimate ;
     
     % get infeasible patches
-    infs_log = (B_h_bounds(:,1) > eeq) | (B_h_bounds(:,2) < -eeq) | (B_g_bounds(:,1) > 0) ;
+    infs_log = (B_h_bounds(:,1) > eeq) | (B_h_bounds(:,2) < -eeq) | ...
+        (B_h_bounds(:,1) > 0) | (B_h_bounds(:,2) < 0) | (B_g_bounds(:,1) > 0) ;
     
     % get undecided patches
     undc_log = (~infs_log) & (~feas_log) ;
@@ -262,9 +264,9 @@ if plot_flag
         
         % labels and stuff
         %xlabel('decision variable')
-        %ylabel('cost')
-        ylabel('$p(x)$','Interpreter','latex')
-        set(gca,'FontSize',15,'LineWidth',1.5)
+        ylabel('cost')
+        %ylabel('$p(x)$','Interpreter','latex')
+        set(gca,'FontSize',17,'LineWidth',1.5)
         
         %% plot inequality constraint
         subplot(3,1,2) ; hold on ; axis([0 1 g_bounds])
@@ -284,9 +286,9 @@ if plot_flag
         
         % labels and stuff
         %xlabel('decision variable')
-        %ylabel('ineq. cons.')
-        ylabel('$g(x)$','Interpreter','latex')
-        set(gca,'FontSize',15,'LineWidth',1.5)
+        ylabel('ineq. cons.')
+        %ylabel('$g(x)$','Interpreter','latex')
+        set(gca,'FontSize',17,'LineWidth',1.5)
         
         %% plot equality constraint
         subplot(3,1,3) ; hold on ; axis([0 1 h_bounds])
@@ -302,18 +304,18 @@ if plot_flag
         plot(x_vals,h_vals,'Color',cons_color,'LineWidth',line_linewidth) ;
         
         % plot 0 line
-        % plot([0 1],[0 0],'--','Color',cons_color,'LineWidth',line_linewidth) ;
+        plot([0 1],[0 0],'-','Color','k','LineWidth',line_linewidth/1.75) ;
         
         % plot equality constraint tolerances
         plot([0 1],[eeq eeq],'--','Color',cons_color,'LineWidth',line_linewidth) ;
         plot([0 1],[-eeq -eeq],'--','Color',cons_color,'LineWidth',line_linewidth) ;
         
         % labels and stuff
-        %xlabel('decision variable')
-        %ylabel('eq. cons.')
-        xlabel('decision variable $x$','Interpreter','latex')
-        ylabel('$h(x)$','Interpreter','latex')
-        set(gca,'FontSize',15,'LineWidth',1.5)
+        xlabel('decision variable')
+        ylabel('eq. cons.')
+        %xlabel('decision variable $x$','Interpreter','latex')
+        %ylabel('$h(x)$','Interpreter','latex')
+        set(gca,'FontSize',17,'LineWidth',1.5)
         
         %% plot and pause for dramatic effect
         drawnow

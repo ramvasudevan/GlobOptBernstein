@@ -12,7 +12,7 @@
 problem_index = 4 ;
 
 % whether or not to save the output
-save_pdf_flag = false ;
+save_pdf_flag = true ;
 
 % the maximum number of iteration used in the program
 default_max_iteration = 28;
@@ -68,6 +68,9 @@ elim_indices = 2:2:problem_solved_index ;
 subd_indices = all_indices ;
 subd_indices(elim_indices) = [] ;
 
+% get the maximum number of patches in each iteration
+max_N_patches = max(reshape(bernstein_N_patches(:),2*dimension,[]),[],1) ;
+
 % get x values for plotting the number of iterations
 plot_subd_values = subd_indices ./ (2*dimension) ;
 plot_elim_values = elim_indices ./ (2*dimension) ;
@@ -84,6 +87,44 @@ disp(' ')
 %% plot
 close all ; 
 f1 = figure(1) ; clf ; hold on ;
+
+% plot the max number of patches at every iteration
+% plot(all_indices./(2*dimension),bernstein_N_patches(1:problem_solved_index),...
+%     'b-','MarkerSize',12,'LineWidth',1);
+plot(1:num_iter,max_N_patches(1:num_iter),...
+    'b-','MarkerSize',12,'LineWidth',1);
+
+% label left side
+ylabel('max # of patches')
+
+% add x ticks for iterations
+grid on
+xticks(1:2:num_iter+1)
+xtickangle(45)
+
+% get the yticks
+yt_left = yticks ;
+
+% plot memory usage on right
+yyaxis right
+% set(gca,'LineColor','k')
+y_left_max = max(yt_left)*memory_per_item ;
+h_mem = plot([0 1],[0,y_left_max],'LineStyle', 'none') ; % invisible plop
+ylabel(['approximate memory used [',mem_type,']'])
+set(gca,'Color','none')
+
+% add title
+title(['benchmark P',num2str(problem_index),': max # of patches / memory usage'])
+
+% label plot
+xlabel('iteration')
+set(gca,'FontSize',14)
+
+% set plot size
+set(gcf,'Position',[500 400 600 400])
+
+%% alternative plot
+f2 = figure(2) ; clf ; hold on ;
 
 % plot the number of patches at every subdivision step
 h_subd = plot(plot_subd_values,bernstein_N_patches(subd_indices),'b.','MarkerSize',12) ;
@@ -133,4 +174,3 @@ if save_pdf_flag
     % print
     print(f1,['P',num2str(problem_index),'_patches_vs_iterations.pdf'],'-dpdf','-r0')
 end
-
