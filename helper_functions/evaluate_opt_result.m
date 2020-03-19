@@ -1,5 +1,9 @@
 function [value,feasibility,violate_terms,difference] = evaluate_opt_result(cost,constraints,input)
-% evaluate the value and the feasibility of the result
+% evaluate the value and the feasibility of the optimal solution found by
+% the solver 
+%
+% Author: Bohao Zhang
+% Created: 6 Jan 2020
 violate_terms = [];
 difference = [];
 feasibility = 1;

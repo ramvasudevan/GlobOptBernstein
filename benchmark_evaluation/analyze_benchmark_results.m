@@ -12,7 +12,7 @@
 problem_index = 4 ;
 
 % whether or not to save the output
-save_pdf_flag = true ;
+save_pdf_flag = false ;
 
 % the maximum number of iteration used in the program
 default_max_iteration = 28;

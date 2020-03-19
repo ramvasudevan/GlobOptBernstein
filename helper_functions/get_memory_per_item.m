@@ -1,6 +1,4 @@
 function memory_per_item = get_memory_per_item(cost,ineq_cons,N_ineq,eq_cons,N_eq)
-% memory_per_item = get_memory_per_item(cost,ineq_cons,N_ineq,eq_cons,N_eq)
-%
 % Given matrices describing the cost and constraints of a polynomial
 % optimization problem, return the number of bytes required to store a
 % single item in the list that PCBA maintains when optimizing.
