@@ -1,3 +1,8 @@
+% A script plotting a simple 1-D demonstration for the Bernstein algorithm
+%
+% Author: Shreyas Kousik
+% Created: 6 Jan 2020
+
 %% POP definition
 % cost function coefficients
 f_coeff = [470 -939  594 -124 4] ;
