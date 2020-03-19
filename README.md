@@ -11,10 +11,10 @@ For more information, please refer to https://www.mathworks.com/help/parallel-co
 
 ## Usage
 - run run_benchmark_evaluation.m and run_benchmark_evaluation_P7.m to generate and save results for section V.B Benchmark Evaluation.
-- run analyze_benchmark_results.m to generate plots of results for section V.B Benchmark Evaluation.
+- run Benchmark_Evaluation/analyze_benchmark_results.m to generate plots of results for section V.B Benchmark Evaluation.
 - run run_increasing_constraints_problems.m for section section V.C to generate and save results in section V.C Increasing Constraint Problems.
-- run analyze_increasing_constraints_results.m to generate plots of results for section V.C Increasing Constraint Problems.
-- run analyze_PCBA_hardware_demo_results.m to generate plots of results for section VI.
+- run increasing_constraints/analyze_increasing_constraints_results.m to generate plots of results for section V.C Increasing Constraint Problems.
+- run hardware_demo/analyze_PCBA_hardware_demo_results.m to generate plots of results for section VI.
 
 ## Authors
 Bohao Zhang
