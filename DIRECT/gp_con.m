@@ -1,4 +1,4 @@
-function [value,fflag] = gp(x)
+function [value,fflag] = gp_con(x)
 %----------------------------------------------------------
 % Goldstein-Price Test Function for Nonlinear Optimization
 %

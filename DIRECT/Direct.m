@@ -500,12 +500,12 @@ if isfield(Problem,'constraint')
     if ~isempty(Problem.constraint)
         for i = 1:Problem.numconstraints
             if length(Problem.constraint(i).func) == length(Problem.f)
-                if double(Problem.constraint(i).func) == double(Problem.f)                    
-                    %-- Dont call constraint; value was returned in obj fcn
-                    con_value = 0;
-                else
+%                 if double(Problem.constraint(i).func) == double(Problem.f)                    
+%                     %-- Dont call constraint; value was returned in obj fcn
+%                     con_value = 0;
+%                 else
                     con_value = feval(Problem.constraint(i).func,point,varargin{:});
-                end
+%                 end
             else
                 con_value = feval(Problem.constraint(i).func,point,varargin{:});
             end
@@ -645,13 +645,14 @@ if isfield(Problem,'constraint')
         if length(Problem.constraint(1).func) == length(Problem.f)
             %-- Constraint values may be returned from objective
             %-- function. Investigate further
-            if double(Problem.constraint(1).func) == double(Problem.f)
-                %-- f returns constraint values
-                retval = 2;
-            else
-                %-- f does not return constraint values
-                retval = 3;
-            end
+%             if double(Problem.constraint(1).func) == double(Problem.f)
+%                 %-- f returns constraint values
+%                 retval = 2;
+%             else
+%                 %-- f does not return constraint values
+%                 retval = 3;
+%             end
+            retval = 3;
         else
             %-- f does not return constraint values
             retval = 3;
