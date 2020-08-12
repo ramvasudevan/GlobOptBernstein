@@ -130,6 +130,23 @@ for i = 1:Lasserre_number
     Lasserre_value = psol_temp.obj;
 end
 
+%% DIRECT
+DIRECT_number = 50;
+DIRECT_time_set = nan(DIRECT_number,1);
+options.maxevals  = 5000;
+options.maxits    = 100;
+options.testflag  = 0;
+options.showits   = 1;
+options.tol       = bernstein_accuracy;
+
+for i = 1:DIRECT_number
+    clc;
+    DIRECT_start_t = tic;
+    eval(strcat('[DIRECT_result,DIRECT_opt] = DIRECT_Benchmark_P',num2str(7),'(options);'));
+    DIRECT_time_set(i) = toc(DIRECT_start_t);
+    [DIRECT_value,DIRECT_feasibility,DIRECT_violate_terms,DIRECT_difference] = evaluate_opt_result(raw_cost,raw_constraints,DIRECT_opt);
+end
+
 %% save the data
 infos.fmincon_time_set = fmincon_time_set;
 infos.fmincon_value_set = fmincon_value_set;
@@ -142,6 +159,8 @@ infos.Lasserre_time_set = Lasserre_time_set;
 infos.Lasserre_value = Lasserre_value;
 infos.Lasserre_d = Lasserre_d;
 infos.Lasserre_k = Lasserre_k;
+infos.DIRECT_time_set = DIRECT_time_set;
+infos.DIRECT_value = DIRECT_value;
 % save(strcat('Benchmark_Evaluation/P7_infos.mat'),'infos');
 
 %% data analysis
@@ -163,3 +182,7 @@ disp('fmincon time median:')
 disp(median(infos.fmincon_time_set));
 disp('fmincon error median:')
 disp(median(infos.fmincon_value_set) - ground_truth);
+disp('DIRECT time median:')
+disp(median(infos.DIRECT_time_set));
+disp('DIRECT error median:')
+disp(median(infos.DIRECT_value) - ground_truth);
