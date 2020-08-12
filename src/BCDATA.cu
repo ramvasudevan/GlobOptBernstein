@@ -452,30 +452,22 @@ void BC::dilation(uint8_t dim) {
 	if (numDimension == 2) {
 		if (dim == 0) {
 			biBCdilationKernelPart1Forx1 << < numUnit, opt_degree[1] >> > (dev_opt_BC, opt_degree[0], opt_unitLength);
-			cudaDeviceSynchronize();
 			biBCdilationKernelPart1Forx1 << < numUnit * numDimension, opt_degree[1] >> > (dev_pd_BC, opt_degree[0], opt_unitLength);
-			cudaDeviceSynchronize();
 			if (numCons > 0) {
 				biBCdilationKernelPart1Forx1 << < numUnit * numCons, con_degree[1] >> > (dev_con_BC, con_degree[0], con_unitLength); 
-				cudaDeviceSynchronize();
 			}
 			if (numEqus > 0) {
 				biBCdilationKernelPart1Forx1 << < numUnit * numEqus, equ_degree[1] >> > (dev_equ_BC, equ_degree[0], equ_unitLength);
-				cudaDeviceSynchronize();
 			}
 		}
 		else {
 			biBCdilationKernelPart1Forx2 << < numUnit, opt_degree[0] >> > (dev_opt_BC, opt_degree[1], opt_unitLength);
-			cudaDeviceSynchronize();
 			biBCdilationKernelPart1Forx2 << < numUnit * numDimension, opt_degree[0] >> > (dev_pd_BC, opt_degree[1], opt_unitLength);
-			cudaDeviceSynchronize();
 			if (numCons > 0) {
 				biBCdilationKernelPart1Forx2 << < numUnit * numCons, con_degree[0] >> > (dev_con_BC, con_degree[1], con_unitLength);
-				cudaDeviceSynchronize();
 			}
 			if (numEqus > 0) {
 				biBCdilationKernelPart1Forx2 << < numUnit * numEqus, equ_degree[0] >> > (dev_equ_BC, equ_degree[1], equ_unitLength);
-				cudaDeviceSynchronize();
 			}
 		}
 	}
@@ -483,58 +475,46 @@ void BC::dilation(uint8_t dim) {
 		if (dim == 0) {
 			dim3 block1(opt_degree[1], opt_degree[2], 1);
 			triBCdilationKernelPart1Forx1 << < numUnit, block1 >> > (dev_opt_BC, opt_degree[0], opt_unitLength);
-			cudaDeviceSynchronize();
 			triBCdilationKernelPart1Forx1 << < numUnit * numDimension, block1 >> > (dev_pd_BC, opt_degree[0], opt_unitLength);
-			cudaDeviceSynchronize();
 
 			if (numCons > 0) {
 				dim3 block2(con_degree[1], con_degree[2], 1);
 				triBCdilationKernelPart1Forx1 << < numUnit * numCons, block2 >> > (dev_con_BC, con_degree[0], con_unitLength);
-				cudaDeviceSynchronize();
 			}
 
 			if (numEqus > 0) {
 				dim3 block3(equ_degree[1], equ_degree[2], 1);
 				triBCdilationKernelPart1Forx1 << < numUnit * numEqus, block3 >> > (dev_equ_BC, equ_degree[0], equ_unitLength);
-				cudaDeviceSynchronize();
 			}
 		}
 		else if (dim == 1) {
 			dim3 block1(opt_degree[0], opt_degree[2], 1);
 			triBCdilationKernelPart1Forx2 << < numUnit, block1 >> > (dev_opt_BC, opt_degree[1], opt_unitLength);
-			cudaDeviceSynchronize();
 			triBCdilationKernelPart1Forx2 << < numUnit * numDimension, block1 >> > (dev_pd_BC, opt_degree[1], opt_unitLength);
-			cudaDeviceSynchronize();
 
 			if (numCons > 0) {
 				dim3 block2(con_degree[0], con_degree[2], 1);
 				triBCdilationKernelPart1Forx2 << < numUnit * numCons, block2 >> > (dev_con_BC, con_degree[1], con_unitLength);
-				cudaDeviceSynchronize();
 			}
 
 			if (numEqus > 0) {
 				dim3 block3(equ_degree[0], equ_degree[2], 1);
 				triBCdilationKernelPart1Forx2 << < numUnit * numEqus, block3 >> > (dev_equ_BC, equ_degree[1], equ_unitLength);
-				cudaDeviceSynchronize();
 			}
 		}
 		else {
 			dim3 block1(opt_degree[0], opt_degree[1], 1);
 			triBCdilationKernelPart1Forx3 << < numUnit, block1 >> > (dev_opt_BC, opt_degree[2], opt_unitLength);
-			cudaDeviceSynchronize();
 			triBCdilationKernelPart1Forx3 << < numUnit * numDimension, block1 >> > (dev_pd_BC, opt_degree[2], opt_unitLength);
-			cudaDeviceSynchronize();
 
 			if (numCons > 0) {
 				dim3 block2(con_degree[0], con_degree[1], 1);
 				triBCdilationKernelPart1Forx3 << < numUnit * numCons, block2 >> > (dev_con_BC, con_degree[2], con_unitLength);
-				cudaDeviceSynchronize();
 			}
 
 			if (numEqus > 0) {
 				dim3 block3(equ_degree[0], equ_degree[1], 1);
 				triBCdilationKernelPart1Forx3 << < numUnit * numEqus, block3 >> > (dev_equ_BC, equ_degree[2], equ_unitLength);
-				cudaDeviceSynchronize();
 			}
 		}
 	}
@@ -542,86 +522,68 @@ void BC::dilation(uint8_t dim) {
 		if (dim == 0) {
 			dim3 block1(opt_degree[1], opt_degree[2], opt_degree[3]);
 			quadBCdilationKernelPart1Forx1 << < numUnit, block1 >> > (dev_opt_BC, opt_degree[0], opt_unitLength);
-			cudaDeviceSynchronize();
 			quadBCdilationKernelPart1Forx1 << < numUnit * numDimension, block1 >> > (dev_pd_BC, opt_degree[0], opt_unitLength);
-			cudaDeviceSynchronize();
 
 			if (numCons > 0) {
 				dim3 block2(con_degree[1], con_degree[2], con_degree[3]);
 				quadBCdilationKernelPart1Forx1 << < numUnit * numCons, block2 >> > (dev_con_BC, con_degree[0], con_unitLength);
-				cudaDeviceSynchronize();
 			}
 
 			if (numEqus > 0) {
 				dim3 block3(equ_degree[1], equ_degree[2], equ_degree[3]);
 				quadBCdilationKernelPart1Forx1 << < numUnit * numEqus, block3 >> > (dev_equ_BC, equ_degree[0], equ_unitLength);
-				cudaDeviceSynchronize();
 			}
 		}
 		else if (dim == 1) {
 			dim3 block1(opt_degree[0], opt_degree[2], opt_degree[3]);
 			quadBCdilationKernelPart1Forx2 << < numUnit, block1 >> > (dev_opt_BC, opt_degree[1], opt_unitLength);
-			cudaDeviceSynchronize();
 			quadBCdilationKernelPart1Forx2 << < numUnit * numDimension, block1 >> > (dev_pd_BC, opt_degree[1], opt_unitLength);
-			cudaDeviceSynchronize();
 
 			if (numCons > 0) {
 				dim3 block2(con_degree[0], con_degree[2], con_degree[3]);
 				quadBCdilationKernelPart1Forx2 << < numUnit * numCons, block2 >> > (dev_con_BC, con_degree[1], con_unitLength);
-				cudaDeviceSynchronize();
 			}
 
 			if (numEqus > 0) {
 				dim3 block3(equ_degree[0], equ_degree[2], equ_degree[3]);
 				quadBCdilationKernelPart1Forx2 << < numUnit * numEqus, block3 >> > (dev_equ_BC, equ_degree[1], equ_unitLength);
-				cudaDeviceSynchronize();
 			}
 		}
 		else if (dim == 2) {
 			dim3 block1(opt_degree[0], opt_degree[1], opt_degree[3]);
 			quadBCdilationKernelPart1Forx3 << < numUnit, block1 >> > (dev_opt_BC, opt_degree[2], opt_unitLength);
-			cudaDeviceSynchronize();
 			quadBCdilationKernelPart1Forx3 << < numUnit * numDimension, block1 >> > (dev_pd_BC, opt_degree[2], opt_unitLength);
-			cudaDeviceSynchronize();
 
 			if (numCons > 0) {
 				dim3 block2(con_degree[0], con_degree[1], con_degree[3]);
 				quadBCdilationKernelPart1Forx3 << < numUnit * numCons, block2 >> > (dev_con_BC, con_degree[2], con_unitLength);
-				cudaDeviceSynchronize();
 			}
 
 			if (numEqus > 0) {
 				dim3 block3(equ_degree[0], equ_degree[1], equ_degree[3]);
 				quadBCdilationKernelPart1Forx3 << < numUnit * numEqus, block3 >> > (dev_equ_BC, equ_degree[2], equ_unitLength);
-				cudaDeviceSynchronize();
 			}
 		}
 		else {
 			dim3 block1(opt_degree[0], opt_degree[1], opt_degree[2]);
 			quadBCdilationKernelPart1Forx4 << < numUnit, block1 >> > (dev_opt_BC, opt_degree[3], opt_unitLength);
-			cudaDeviceSynchronize();
 			quadBCdilationKernelPart1Forx4 << < numUnit * numDimension, block1 >> > (dev_pd_BC, opt_degree[3], opt_unitLength);
-			cudaDeviceSynchronize();
 
 			if (numCons > 0) {
 				dim3 block2(con_degree[0], con_degree[1], con_degree[2]);
 				quadBCdilationKernelPart1Forx4 << < numUnit * numCons, block2 >> > (dev_con_BC, con_degree[3], con_unitLength);
-				cudaDeviceSynchronize();
 			}
 
 			if (numEqus > 0) {
 				dim3 block3(equ_degree[0], equ_degree[1], equ_degree[2]);
 				quadBCdilationKernelPart1Forx4 << < numUnit * numEqus, block3 >> > (dev_equ_BC, equ_degree[3], equ_unitLength);
-				cudaDeviceSynchronize();
 			}
 		}
 	}
 
 	BCdilationKernelPart2 << < numUnit, numDimension >> > (dev_interval, dev_pdFlag, dim, dev_pdValue);
-	cudaDeviceSynchronize();
 
 	BCdilationKernelPart3 << < numUnit, numCons >> > (dev_consFlag);
-	cudaDeviceSynchronize();
 
 	numUnit <<= 1;
 }
@@ -955,30 +917,24 @@ __global__ void BCdilationKernelPart3(char* target_consFlag) {
 void BC::findFlag() {
 	if (numCons > 0) {
 		BCfindFlagKernel << < numUnit * numCons, con_unitLength >> > (dev_consFlag, dev_con_BC);
-		cudaDeviceSynchronize();
 		BCfindIntFlagKernel << < numUnit, 1 >> > (dev_intFlag, dev_consFlag, numCons);
-		cudaDeviceSynchronize();
 
 		cudaMemcpy(intFlag, dev_intFlag, numUnit * sizeof(char), cudaMemcpyDeviceToHost);
 	}
 
 	if (numEqus > 0) {
 		BCfindEquFlagKernel << < numUnit * numEqus, equ_unitLength >> > (dev_equsFlag, dev_equ_BC);
-		cudaDeviceSynchronize();
 		BCfindEFlagKernel << < numUnit, 1 >> > (dev_eFlag, dev_equsFlag, numEqus);
-		cudaDeviceSynchronize();
 
 		cudaMemcpy(eFlag, dev_eFlag, numUnit * sizeof(bool), cudaMemcpyDeviceToHost);
 	}
 
 	BCfindBoundKernel << < numUnit, opt_unitLength >> > (dev_bdMin, dev_bdMax, dev_opt_BC);
-	cudaDeviceSynchronize();
 
 	cudaMemcpy(bdMin, dev_bdMin, numUnit * sizeof(float), cudaMemcpyDeviceToHost);
 	cudaMemcpy(bdMax, dev_bdMax, numUnit * sizeof(float), cudaMemcpyDeviceToHost);
 
 	BCfindDerivativeKernel << < numUnit * numDimension, opt_unitLength >> > (dev_pdFlag, dev_pd_BC, dev_pdValue);
-	cudaDeviceSynchronize();
 	
 	if(numDimension == 2){
 		biBCfinddFlagKernel << < numUnit, 1 >> > (dev_dFlag, dev_pdFlag, numDimension, dev_interval, int_iter[0], int_iter[1]);
@@ -989,7 +945,6 @@ void BC::findFlag() {
 	else if(numDimension == 4){
 		quadBCfinddFlagKernel << < numUnit, 1 >> > (dev_dFlag, dev_pdFlag, numDimension, dev_interval, int_iter[0], int_iter[1], int_iter[2], int_iter[3]);
 	}
-	cudaDeviceSynchronize();
 
 	cudaMemcpy(dFlag, dev_dFlag, numUnit * sizeof(bool), cudaMemcpyDeviceToHost);
 }
@@ -1389,25 +1344,20 @@ void BC::eliminate() {
 		cudaMemcpy(dev_savePos, savePos, saveNum * sizeof(uint32_t), cudaMemcpyHostToDevice);
 
 		BCeliminateKernelPart1 << < replaceNum, opt_unitLength >> > (dev_opt_BC, dev_elimPos, dev_savePos, saveNum);
-		cudaDeviceSynchronize();
 
 		BCeliminateKernelPart2 << < replaceNum, numDimension >> > (dev_interval, dev_elimPos, dev_savePos, saveNum);
-		cudaDeviceSynchronize();
 
 		if (numCons > 0) {
 			dim3 grid1(replaceNum, numCons, 1);
 			BCeliminateKernelPart3 << < grid1, con_unitLength >> > (dev_con_BC, dev_consFlag, dev_elimPos, dev_savePos, saveNum);
-			cudaDeviceSynchronize();
 		}
 
 		if (numEqus > 0) {
 			BCeliminateKernelPart1 << < replaceNum * numEqus, equ_unitLength >> > (dev_equ_BC, dev_elimPos, dev_savePos, saveNum);
-			cudaDeviceSynchronize();
 		}
 
 		dim3 grid2(replaceNum, numDimension, 1);
 		BCeliminateKernelPart4 << < grid2, opt_unitLength >> > (dev_pd_BC, dev_pdFlag, dev_elimPos, dev_savePos, saveNum);
-		cudaDeviceSynchronize();
 	}
 
 	numUnit = saveNum;
@@ -1471,7 +1421,7 @@ void BC::finalResult() {
 		else {
 			quadBCfinalResultKernel << < numUnit, numDimension >> > (dev_intervalRes, dev_interval, int_iter[0], int_iter[1], int_iter[2], int_iter[3]);
 		}
-		cudaDeviceSynchronize();
+
 		cudaMemcpy(intervalRes, dev_intervalRes, numUnit * numDimension * sizeof(float), cudaMemcpyDeviceToHost);
 
 		candidates = new float[numUnit];
