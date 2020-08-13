@@ -23,6 +23,7 @@ problem_index = 2 ; % pick an integer from 1 through 9
 
 % colors
 pcba_color = [0 0 1] ;
+DIRECT_color = [140 140 40]./255 ;
 bsos_color = [0 191 40]./255 ;
 fmincon_color = [1 0 0] ;
 
@@ -40,15 +41,15 @@ problem_name = {'ElAttar-Vidyasagar-Dutta','Powell','Wood',...
 
 % true optimal value for each cost function
 ground_truth = [0;
-    0;
-    -124.75;
-    -24.77109375;
-    0;
-    0;
-    0;
-    0.000001712780354;
-    0;
-    0];
+                0;
+                -124.75;
+                -24.77109375;
+                0;
+                0;
+                0;
+                0.000001712780354;
+                0;
+                0];
 
 % dimension and degree of problems
 problem_dimension = [2 2 4 2 3 4 2 2 2] ;
@@ -70,6 +71,7 @@ load(['more_',num2str(problem_index),'.mat']); % problem cost, constraints, etc
 
 % extract results and get error in optimal value
 pcba_result = infos.bernstein_value_set - ground_truth(problem_index+1);
+DIRECT_result = infos.DIRECT_value_set - ground_truth(problem_index+1);
 bsos_result = infos.Lasserre_value_set - ground_truth(problem_index+1);
 fmincon_result = infos.fmincon_value_set - ground_truth(problem_index+1);
 
@@ -82,6 +84,9 @@ if plot_figures_flag
     
     % plot fmincon boxes first
     boxplot_for_fmincon(fmincon_result,con_x,fmincon_color)
+    
+    % plot DIRECT result
+    plot(1:total_steps,DIRECT_result,'o','Color',DIRECT_color,'MarkerSize',5,'LineWidth',3) ;
     
     % plot pcba result
     plot(1:total_steps,pcba_result,'x','Color',pcba_color,'MarkerSize',9,'LineWidth',2) ;
@@ -103,6 +108,7 @@ end
 %% time analysis
 % get data on time spent
 pcba_time = infos.bernstein_time_set;
+DIRECT_time = infos.DIRECT_time_set;
 bsos_time = infos.Lasserre_time_set;
 fmincon_time = infos.fmincon_time_set;
 
@@ -115,6 +121,9 @@ if plot_figures_flag
     
     % plot pcba result
     h_pcba = plot(1:total_steps,log10(pcba_time),'x','Color',pcba_color,'MarkerSize',9,'LineWidth',2) ;
+    
+    % plot pcba result
+    h_DIRECT = plot(1:total_steps,log10(DIRECT_time),'o','Color',DIRECT_color,'MarkerSize',5,'LineWidth',3) ;
     
     % plot bsos result
     h_bsos = plot(1:total_steps,log10(bsos_time),'o','Color',bsos_color,'MarkerSize',10,'LineWidth',2) ;
@@ -133,7 +142,7 @@ if plot_figures_flag
     
     % legend
     h_fmincon = findall(f2,'tag','Box') ;
-    legend([h_pcba,h_bsos,h_fmincon(1)],{'PCBA','BSOS','fmincon'},'Location','northwest')
+    legend([h_pcba,h_DIRECT,h_bsos,h_fmincon(1)],{'PCBA','DIRECT','BSOS','fmincon'},'Location','northwest')
 end
 
 %% memory analysis
