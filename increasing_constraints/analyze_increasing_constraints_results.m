@@ -23,7 +23,7 @@ problem_index = 2 ; % pick an integer from 1 through 9
 
 % colors
 pcba_color = [0 0 1] ;
-DIRECT_color = [140 140 40]./255 ;
+DIRECT_color = [240 240 0]./255 ;
 bsos_color = [0 191 40]./255 ;
 fmincon_color = [1 0 0] ;
 
@@ -86,7 +86,7 @@ if plot_figures_flag
     boxplot_for_fmincon(fmincon_result,con_x,fmincon_color)
     
     % plot DIRECT result
-    plot(1:total_steps,DIRECT_result,'o','Color',DIRECT_color,'MarkerSize',5,'LineWidth',3) ;
+    plot(1:total_steps,DIRECT_result,'^','Color',DIRECT_color,'MarkerSize',5,'LineWidth',3) ;
     
     % plot pcba result
     plot(1:total_steps,pcba_result,'x','Color',pcba_color,'MarkerSize',9,'LineWidth',2) ;
@@ -122,8 +122,8 @@ if plot_figures_flag
     % plot pcba result
     h_pcba = plot(1:total_steps,log10(pcba_time),'x','Color',pcba_color,'MarkerSize',9,'LineWidth',2) ;
     
-    % plot pcba result
-    h_DIRECT = plot(1:total_steps,log10(DIRECT_time),'o','Color',DIRECT_color,'MarkerSize',5,'LineWidth',3) ;
+    % plot DIRECT result
+    h_DIRECT = plot(1:total_steps,log10(DIRECT_time),'^','Color',DIRECT_color,'MarkerSize',5,'LineWidth',3) ;
     
     % plot bsos result
     h_bsos = plot(1:total_steps,log10(bsos_time),'o','Color',bsos_color,'MarkerSize',10,'LineWidth',2) ;
