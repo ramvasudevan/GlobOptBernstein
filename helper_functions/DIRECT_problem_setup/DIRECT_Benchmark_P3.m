@@ -43,7 +43,7 @@ g1 = [0,     0,   110;
 Problem.constraint(1).func = @(x)evaluate_function(g1,x);
 Problem.constraint(1).penalty = constraint_penalty ;
   
-g2 = [[   0,   0,                              119]
+g2 = [[   0,   0,                              119.000001]
         [ 1.0,   0,                           -680]
         [ 2.0,   0,                           1280]
         [ 3.0,   0,                           -800]
