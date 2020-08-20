@@ -12,8 +12,18 @@ function [fmin,x] = DIRECT_Benchmark_P8(options)
 % http://www4.ncsu.edu/~definkel/research/index.html   %
 %------------------------------------------------------%
 
+% 0. create default options if necessary
+if nargin < 1
+    options.maxevals  = 50000;
+    options.maxits    = 25;
+    options.testflag  = 0;
+    options.showits   = 1;
+    options.tol = 5e-7 ;
+end
+
 % 1. Establish bounds for variables
 bounds = [0 1;0 1;0 1;0 1];
+constraint_penalty = 1 ;
 
 % 2. Send options to Direct
 
@@ -61,7 +71,7 @@ g1 = [[   0,   0,   0,   0,     6.39453125]
         [ 2.0,   0, 1.0, 1.0,      1083.75]
         [ 1.0,   0, 2.0, 1.0,     -79.6875]];
 Problem.constraint(1).func = @(x)evaluate_function(g1,x);
-Problem.constraint(1).penalty = 1;
+Problem.constraint(1).penalty = constraint_penalty;
   
 g2 = [[   0,   0,   0,   0,                        43.41080711]
         [ 1.0,   0,   0,   0,                      -243.046875]
@@ -93,7 +103,7 @@ g2 = [[   0,   0,   0,   0,                        43.41080711]
         [ 2.0,   0, 1.0, 1.0,                          1083.75]
         [ 1.0,   0, 2.0, 1.0,                         -79.6875]];
 Problem.constraint(2).func = @(x)evaluate_function(g2,x);
-Problem.constraint(2).penalty = 1;
+Problem.constraint(2).penalty = constraint_penalty;
 
 g3 = [[   0,   0,   0,   0,    -5.382080078125]
         [ 1.0,   0,   0,   0,   -86.1455078125]
@@ -141,30 +151,30 @@ g3 = [[   0,   0,   0,   0,    -5.382080078125]
         [ 2.0,   0, 2.0, 1.0,      2370.703125]
         [ 1.0,   0, 3.0, 1.0,    -174.31640625]];
 Problem.constraint(3).func = @(x)evaluate_function(g3,x);
-Problem.constraint(3).penalty = 1;
+Problem.constraint(3).penalty = constraint_penalty;
 
 g4 = [   0     0    0    0   -3;
          1     0    0    0    17;
          0     1    0    0   -39];
 Problem.constraint(4).func = @(x)evaluate_function(g4,x);
-Problem.constraint(4).penalty = 1;
+Problem.constraint(4).penalty = constraint_penalty;
 
 g5 = [0     0     0    0    1;
       1     0     0    0   -17;
       0     1     0    0    26];
 Problem.constraint(5).func = @(x)evaluate_function(g5,x);
-Problem.constraint(5).penalty = 1;
+Problem.constraint(5).penalty = constraint_penalty;
 
 g6 = [0     0     0    0   -0.2500;
       0     0     1    0    0.6250;
       0     0     0    1   -1.5000];
 Problem.constraint(6).func = @(x)evaluate_function(g6,x);
-Problem.constraint(6).penalty = 1;
+Problem.constraint(6).penalty = constraint_penalty;
 
 g7 = [0     0     1    0   -0.6250
       0     0     0    1    0.5000];
 Problem.constraint(7).func = @(x)evaluate_function(g7,x);
-Problem.constraint(7).penalty = 1;
+Problem.constraint(7).penalty = constraint_penalty;
 
 % 3. Call DIRECT
 [fmin,x,~] = Direct(Problem,bounds,options);

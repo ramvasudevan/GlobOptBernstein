@@ -152,13 +152,16 @@ while perror > tol
    [minval,fminindex] =  min(fc(1:fcncounter)+con(1:fcncounter));
    penminval = minval + con(fminindex);
    xatmin = (om_upper - om_lower).*c(:,fminindex) + om_lower;
-   if (con(fminindex) > 0)|(feas_flags(fminindex) ~= 0)
-       %--- new minval is infeasible, don't do anything
-   else
-       %--- update return values
-       ret_minval = minval;
+   
+%%% SHREYAS COMMENTED OUT THIS IF STATEMENT %%%
+%    if (con(fminindex) > 0)|(feas_flags(fminindex) ~= 0)
+%        %--- new minval is infeasible, don't do anything
+%    else
+%        %--- update return values
+       ret_minval = minval ;
        ret_xatmin = xatmin;
-   end
+%    end
+%%% SHREYAS COMMENTED OUT THIS IF STATEMENT %%%
 
    %--see if we are done ------------------------------------------%
    if tflag == 1
@@ -229,6 +232,20 @@ elseif g_nargout == 3
     history(1:size(history,1)-1,:) = history(2:size(history,1),:);
     history = history(1:size(history,1)-1,:);
 end
+
+%%% SHREYAS ADDED THIS %%%
+% %-- inspect final solution feasibility
+% x_feas = true ;
+% for idx = 1:Problem.numconstraints
+%     x_feas_idx = Problem.constraint(idx).func(final_xatmin) <= 0 ;
+%     x_feas = x_feas && x_feas_idx ;
+% end
+% if x_feas
+%     disp('DIRECT converged to a feasible solution!')
+% else
+%     disp('DIRECT converged to an infeasible solution!')
+% end
+%%% SHREYAS ADDED THIS %%%
 return
 %------------------------------------------------------------------%
 % Function:   DIRini                                               %
