@@ -24,8 +24,8 @@ pcba_options = memoryRecordMode * 2 + verboseMode;
 [bernstein_opt,bernstein_accuracy,bernstein_memory] = PCBA(bernstein_cost,bernstein_constraint,cons_length,0,0,pcba_options);
 
 % run another 50 times to get an average time
-pcba_num = 1;
-verboseMode = 0;
+pcba_num = 50;
+verboseMode = 1;
 memoryRecordMode = 0;
 pcba_options = memoryRecordMode * 2 + verboseMode;
 bernstein_time_set = nan(pcba_num,1);
@@ -45,7 +45,7 @@ end
 
 %% fmincon
 clc;
-fmincon_num = 50;
+fmincon_num = 1;
 fmincon_time_set = nan(fmincon_num,1);
 fmincon_value_set = nan(fmincon_num,1);
 fmincon_exit_flag = nan(fmincon_num, 1); % 1 means successful, 0 means not
@@ -131,17 +131,10 @@ end
 %% DIRECT
 DIRECT_number = 50;
 DIRECT_time_set = nan(DIRECT_number,1);
-% options.maxevals  = 5000;
-% options.maxits    = 100;
-% options.testflag  = 0;
-% options.showits   = 0;
-% options.tol       = bernstein_accuracy;
 
 for i = 1:DIRECT_number
     clc;
     DIRECT_start_t = tic;
-%     eval(strcat('[DIRECT_result,DIRECT_opt] = DIRECT_Benchmark_P',num2str(problem_index),'(options);'));
-
     % SHREYAS removed the options for DIRECT and set them manually in each
     % script, since we had to tune the constraint tolerances :/
     eval(strcat('[DIRECT_result,DIRECT_opt] = DIRECT_Benchmark_P',num2str(problem_index),'();'));
