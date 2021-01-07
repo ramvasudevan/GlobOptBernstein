@@ -39,6 +39,7 @@ All the information is promised to be stored in the same index in no matter whic
 #define threed_MAX_UNIT_NUM 40000
 #define fourd_MAX_UNIT_NUM 100000
 
+// ratio
 #define STOPPING_CRITERIA 1e-7
 
 class BC {
