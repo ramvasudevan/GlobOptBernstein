@@ -1,8 +1,10 @@
 % A script plotting a simple 1-D demonstration for the Bernstein algorithm
+% with constraints
 %
 % Author: Shreyas Kousik
 % Created: 6 Jan 2020
-
+% Updated: 22 May 2021
+clear ; clc ;
 %% POP definition
 % cost function coefficients
 f_coeff = [470 -939  594 -124 4] ;
@@ -31,7 +33,7 @@ N_iter = 10 ;
 eeq = 1 ;
 
 % plotting
-plot_iterations = 4  ;
+plot_iterations = 1:N_iter  ;
 plot_flag = true ;
 plot_pause_duration = 0.25 ;
 
@@ -42,6 +44,7 @@ feas_color = [0.7 1 0.7] ;
 infs_color = [1 0.7 1] ;
 undc_color = [0.8 0.8 0.8] ;
 subo_color = [0.7 1 1] ;
+optr_color = [0.2 0.5 0.1] ;
 
 patch_linewidth = 1 ;
 line_linewidth = 2 ;
@@ -53,8 +56,7 @@ h_bounds = [-3 3] ;
 plot_position = [0 0 750 750] ;
 
 % save figure output
-save_pdf_flag = true ;
-save_pdf_filename = ['pcba_demo_iteration_',num2str(plot_iterations(end)),'.pdf'] ;
+save_png_flag = false ;
 
 %% automated from here
 % generate msspolys for f, g, and h
@@ -87,6 +89,7 @@ N_patches = size(B_f,1) ;
 
 % current solution estimate
 solution_estimate = inf ;
+optimizer_estimate = nan ;
 
 % cell arrays for feasible, infeasible, undecided, and suboptimal patches
 B_f_feas = cell(1,N_iter+1) ;
@@ -109,6 +112,7 @@ B_h_subo = cell(1,N_iter+1) ;
 % whether they are infeasible or have a lower bound greater than the least
 % upper bound
 solution_estimate_all = cell(1,N_iter+1) ;
+optimizer_estimate_all = cell(1,N_iter+1) ;
 
 %% initialize
 % set up the center and width of the first patch
@@ -128,9 +132,12 @@ B_h_undc{1} = B_h ;
 
 % the initial solution estimate is infinity
 solution_estimate_all{1} = solution_estimate ;
+optimizer_estimate_all{1} = optimizer_estimate ;
 
 %% run BA
 for itr = 2:(N_iter+1)
+    disp(['Running BA iteration ',num2str(itr-1)])
+    
     %% begin current iteration
     % cut the patch width in half
     dx = dx / 2 ;
@@ -197,8 +204,16 @@ for itr = 2:(N_iter+1)
     feas_log = eq_cons_log & ineq_cons_log ;
     
     % update solution estimate as smallest upper bound of feasible patches
-    solution_estimate = min([solution_estimate ; B_f_bounds(feas_log,2)]) ;
+    [solution_estimate ; B_f_bounds(:,2)]
+    [solution_estimate,opt_row_idx] = min([solution_estimate ; B_f_bounds(:,2)]) ;
     solution_estimate_all{itr} = solution_estimate ;
+    
+    % update optimizer as center of patch with smallest upper bound, or
+    % leave unchanged
+    if opt_row_idx > 1
+        optimizer_estimate = B_f_new(opt_row_idx-1,1) ;
+    end
+    optimizer_estimate_all{itr} = optimizer_estimate ;
     
     % get infeasible patches
     infs_log = (B_h_bounds(:,1) > eeq) | (B_h_bounds(:,2) < -eeq) | ...
@@ -247,8 +262,13 @@ if plot_flag
     close all
     
     for itr = plot_iterations
+        disp(['Plotting BA iteration ',num2str(itr)])
+        
+        %% figure setup
         fh = figure(1) ; clf ; hold on ;
-        set(fh,'Position',plot_position) ;
+        if itr == 1
+            set(fh,'Position',plot_position) ;
+        end
         
         %% plot cost
         subplot(3,1,1) ; hold on ; axis([0 1 f_bounds])
@@ -265,7 +285,11 @@ if plot_flag
         
         % plot solution estimate
         plot([0 1],solution_estimate_all{itr}.*ones(1,2),'--',...
-            'Color',cost_color,'LineWidth',line_linewidth) ;
+            'Color',optr_color,'LineWidth',line_linewidth) ;
+        
+        % plot optimizer estimate
+        plot(optimizer_estimate_all{itr}.*ones(1,2),f_bounds,'--',...
+            'Color',optr_color,'LineWidth',line_linewidth) ;
         
         % labels and stuff
         %xlabel('decision variable')
@@ -325,96 +349,96 @@ if plot_flag
         %% plot and pause for dramatic effect
         drawnow
         pause(plot_pause_duration)
+        
+        %% save output
+        if save_png_flag
+            save_png_filename = ['ba_cons_iter_',num2str(itr),'.png'] ;
+            save_figure_to_png(fh,save_png_filename) ;
+        end
     end
-end
-
-%% save output
-if save_pdf_flag
-    save_figure_to_pdf(fh,save_pdf_filename) ;
 end
 
 %% helper functions
 function [ coeff ] = Poly2Bernstein_1D( p, n )
-[ ~, pow, M ] = decomp( p );
-if nargin < 2
-    n = deg( p );
-end
-if deg( p ) == 0
-    coeff = ones( n+1, 1 );
-    return;
-end
-a = zeros( n + 1, 1 );
-a( pow + 1 ) = M;
-
-Mat = zeros( n+1, n+1 );
-
-for i = 0 : n
-    for j = 0 : i
-        Mat( i+1, j+1 ) = nchoosek( i, j ) / nchoosek( n, j );
+    [ ~, pow, M ] = decomp( p );
+    if nargin < 2
+        n = deg( p );
     end
-end
+    if deg( p ) == 0
+        coeff = ones( n+1, 1 );
+        return;
+    end
+    a = zeros( n + 1, 1 );
+    a( pow + 1 ) = M;
 
-coeff = Mat * a;
+    Mat = zeros( n+1, n+1 );
+
+    for i = 0 : n
+        for j = 0 : i
+            Mat( i+1, j+1 ) = nchoosek( i, j ) / nchoosek( n, j );
+        end
+    end
+
+    coeff = Mat * a;
 end
 
 function [ coeffA, coeffB ] = Bernstein_Dilation_1D( coeff )
+    n = length( coeff ) - 1;
+    coeffA = coeff;
+    coeffB = zeros( 1, n+1 );
+    coeffB( end ) = coeffA( end );
 
-n = length( coeff ) - 1;
-coeffA = coeff;
-coeffB = zeros( 1, n+1 );
-coeffB( end ) = coeffA( end );
-
-% This is from Nataraj and Arounassalame 2007 Equation (5), with
-% \lambda = 0.5
-for k = 1 : n
-    tmpA = coeffA;
-    for i = k : n
-        coeffA( i + 1 ) = 0.5 * ( tmpA(i) + tmpA(i+1) );
+    % This is from Nataraj and Arounassalame 2007 Equation (5), with
+    % \lambda = 0.5
+    for k = 1 : n
+        tmpA = coeffA;
+        for i = k : n
+            coeffA( i + 1 ) = 0.5 * ( tmpA(i) + tmpA(i+1) );
+        end
+        coeffB( n - k + 1 ) = coeffA( end );
     end
-    coeffB( n - k + 1 ) = coeffA( end );
-end
-% coeffB = flipud( coeffA );
+    % coeffB = flipud( coeffA );
 end
 
 function plot_patch(patch_info,color,elim_flag,varargin)
-c = patch_info(1) ; % center
-w = patch_info(2) ; % width
-l = min(patch_info(3:end)) ; % lower bound
-u = max(patch_info(3:end)) ; % upper bound
+    c = patch_info(1) ; % center
+    w = patch_info(2) ; % width
+    l = min(patch_info(3:end)) ; % lower bound
+    u = max(patch_info(3:end)) ; % upper bound
 
-% make vertices
-x = [c-w/2, c+w/2, c+w/2, c-w/2] ;
-y = [l,l,u,u] ;
+    % make vertices
+    x = [c-w/2, c+w/2, c+w/2, c-w/2] ;
+    y = [l,l,u,u] ;
 
-% plot patch
-patch(x,y,color,varargin{:}) ;
+    % plot patch
+    patch(x,y,color,varargin{:}) ;
 
-% plot an x in a patch if it is to be eliminated
-if elim_flag
-    x = c ;
-    y = (l+u)/2 ;
-    plot(x,y,'kx','LineWidth',2,'MarkerSize',10)
-end
+%     % plot an x in a patch if it is to be eliminated
+%     if elim_flag
+%         x = c ;
+%         y = (l+u)/2 ;
+%         plot(x,y,'kx','LineWidth',2,'MarkerSize',10)
+%     end
 end
 
 function plot_patches(F,I,U,S,fcolor,icolor,ucolor,scolor,lw)
-% plot feasible patches
-for idx = 1:size(F,1)
-    plot_patch(F(idx,:),fcolor,false,'LineWidth',lw)
-end
+    % plot feasible patches
+    for idx = 1:size(F,1)
+        plot_patch(F(idx,:),fcolor,false,'LineWidth',lw)
+    end
 
-% plot infeasible patches
-for idx = 1:size(I,1)
-    plot_patch(I(idx,:),icolor,true,'LineWidth',lw)
-end
+    % plot infeasible patches
+    for idx = 1:size(I,1)
+        plot_patch(I(idx,:),icolor,true,'LineWidth',lw)
+    end
 
-% plot undecided patches
-for idx = 1:size(U,1)
-    plot_patch(U(idx,:),ucolor,false,'LineWidth',lw)
-end
+    % plot undecided patches
+    for idx = 1:size(U,1)
+        plot_patch(U(idx,:),ucolor,false,'LineWidth',lw)
+    end
 
-% plot suboptimal patches
-for idx = 1:size(S,1)
-    plot_patch(S(idx,:),scolor,true,'LineWidth',lw)
-end
+    % plot suboptimal patches
+    for idx = 1:size(S,1)
+        plot_patch(S(idx,:),scolor,true,'LineWidth',lw)
+    end
 end
