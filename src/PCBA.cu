@@ -4,17 +4,17 @@
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 	double* opt_data = (double*)mxGetData(prhs[0]);
-	uint16_t opt_m = (uint16_t)mxGetM(prhs[0]);
-	uint8_t opt_n = (uint8_t)mxGetN(prhs[0]);
+	uint32_t opt_m = (uint32_t)mxGetM(prhs[0]);
+	uint32_t opt_n = (uint32_t)mxGetN(prhs[0]);
 
 	poly opt(opt_m - 1, opt_n, opt_data);
 
 	double* con_data = (double*)mxGetData(prhs[1]);
-	uint16_t con_m = (uint16_t)mxGetM(prhs[1]);
-	uint8_t con_n = (uint8_t)mxGetN(prhs[1]);
+	uint32_t con_m = (uint32_t)mxGetM(prhs[1]);
+	uint32_t con_n = (uint32_t)mxGetN(prhs[1]);
 
 	double* con_len = (double*)mxGetData(prhs[2]);
-	uint16_t conNum = (uint16_t)mxGetM(prhs[2]);
+	uint32_t conNum = (uint32_t)mxGetM(prhs[2]);
 	double* con_data_shift = con_data;
 
 	if (conNum == 1 && con_len[0] == 0) {
@@ -22,11 +22,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 	}
 
 	double* equ_data = (double*)mxGetData(prhs[3]);
-	uint16_t equ_m = (uint16_t)mxGetM(prhs[3]);
-	uint8_t equ_n = (uint8_t)mxGetN(prhs[3]);
+	uint32_t equ_m = (uint32_t)mxGetM(prhs[3]);
+	uint32_t equ_n = (uint32_t)mxGetN(prhs[3]);
 
 	double* equ_len = (double*)mxGetData(prhs[4]);
-	uint16_t equNum = (uint16_t)mxGetM(prhs[4]);
+	uint32_t equNum = (uint32_t)mxGetM(prhs[4]);
 	double* equ_data_shift = equ_data;
 
 	uint32_t options = (uint32_t)(*(double*)mxGetData(prhs[5]));

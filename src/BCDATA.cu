@@ -3,7 +3,7 @@
 
 #include "BCDATA.h"
 
-BC::BC(poly* opt_in, uint8_t numCons_in, poly* cons_in, uint8_t numEqus_in, poly* equs_in) {
+BC::BC(poly* opt_in, uint32_t numCons_in, poly* cons_in, uint32_t numEqus_in, poly* equs_in) {
 	opt = opt_in;
 	cons = cons_in;
 	numCons = numCons_in;
@@ -1000,7 +1000,7 @@ __global__ void BCfindFlagKernel(char* conFlag, float* BC)
 	}
 }
 
-__global__ void BCfindIntFlagKernel(char* intFlag, char* conFlag, uint8_t numCons) {
+__global__ void BCfindIntFlagKernel(char* intFlag, char* conFlag, uint32_t numCons) {
 	int flagID = blockIdx.x;
 	bool ifSatisfy = true;
 	for (int intID = flagID * numCons; intID < (flagID + 1) * numCons; intID++) {
@@ -1046,7 +1046,7 @@ __global__ void BCfindEquFlagKernel(bool* equFlag, float* BC)
 	}
 }
 
-__global__ void BCfindEFlagKernel(bool* eFlag, bool* equsFlag, uint8_t numEqus) {
+__global__ void BCfindEFlagKernel(bool* eFlag, bool* equsFlag, uint32_t numEqus) {
 	int flagID = blockIdx.x;
 	for (int intID = flagID * numEqus; intID < (flagID + 1) * numEqus; intID++) {
 		if (equsFlag[intID] == 0) {

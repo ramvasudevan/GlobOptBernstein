@@ -29,14 +29,14 @@ All the information is promised to be stored in the same index in no matter whic
 #include "poly2BC.h"
 
 // maximum of iteration number, should NOT be larger than 32 since position info is stored in uint32_t
-#define MAX_ITER_NUM 28
+#define MAX_ITER_NUM 30
 
 // used for shared memory pre-allocation, the maximum size of a Bernstein patch
 #define MAX_UNIT_LENGTH 1000
 
 // used for global memory pre-allocation, the maximum number of Bernstein patches for different dimension problems
 #define twod_MAX_UNIT_NUM  5000
-#define threed_MAX_UNIT_NUM 40000
+#define threed_MAX_UNIT_NUM 5000
 #define fourd_MAX_UNIT_NUM 100000
 
 // ratio
@@ -53,7 +53,7 @@ public:
 		equs_in    -> an array of equality constraint polynomials
 	EFFECT: defined constructor to initialize the optimizer
 	*/
-	BC(poly* opt_in, uint8_t numCons_in, poly* cons_in, uint8_t numEqus_in, poly* equs_in);
+	BC(poly* opt_in, uint32_t numCons_in, poly* cons_in, uint32_t numEqus_in, poly* equs_in);
 
 	/*
 	EFFECT: default destructor
@@ -146,11 +146,11 @@ public:
 
 	// an array of pointers to the inequality constraint polynomials
 	poly* cons;
-	uint8_t numCons;
+	uint32_t numCons;
 
 	// an array of pointers to the equality constraint polynomials
 	poly* equs;
-	uint8_t numEqus;
+	uint32_t numEqus;
 
 	// number of dimension of the problem
 	uint8_t numDimension;
@@ -404,11 +404,11 @@ __global__ void BCdilationKernelPart3(char* target_consFlag);
 
 __global__ void BCfindFlagKernel(char* conFlag, float* BC);
 
-__global__ void BCfindIntFlagKernel(char* intFlag, char* conFlag, uint8_t numCons);
+__global__ void BCfindIntFlagKernel(char* intFlag, char* conFlag, uint32_t numCons);
 
 __global__ void BCfindEquFlagKernel(bool* equFlag, float* BC);
 
-__global__ void BCfindEFlagKernel(bool* eFlag, bool* equsFlag, uint8_t numEqus);
+__global__ void BCfindEFlagKernel(bool* eFlag, bool* equsFlag, uint32_t numEqus);
 
 __global__ void BCfindBoundKernel(float* bdMin, float* bdMax, float* BC);
 
