@@ -78,7 +78,7 @@ public:
 													V
 		    [info for left of 1 st unit, info for left of 2 nd unit, ..., info for n th left of unit, info for right of 1 st unit, info for right of 2 nd unit, ..., info for n th right of unit]
 	*/
-	void dilation(uint8_t dim);
+	void dilation(uint32_t dim);
 
 	/*
 	EFFECT: find the lower and upper bound of the patches (problem polynomial and constraint polynomials).
@@ -153,17 +153,17 @@ public:
 	uint32_t numEqus;
 
 	// number of dimension of the problem
-	uint8_t numDimension;
+	uint32_t numDimension;
 
 	// an array of (maximum) degrees of x_i for (problem, ineq con, eq con) polynomials
-	uint8_t* opt_degree;
-	uint8_t* con_degree;
-	uint8_t* equ_degree;
+	uint32_t* opt_degree;
+	uint32_t* con_degree;
+	uint32_t* equ_degree;
 
 	// the length of a Bernstein unit. In other word, the number of Bernstein coefficients in a unit.
-	uint16_t opt_unitLength;
-	uint16_t con_unitLength;
-	uint16_t equ_unitLength;
+	uint32_t opt_unitLength;
+	uint32_t con_unitLength;
+	uint32_t equ_unitLength;
 
 	/* 
 	the array of Bernstein coefficients of the problem polynomial. 
@@ -236,7 +236,7 @@ public:
 	we will also need one array recording the number of iterations having been performed on each dimension,
 	so that we could compute the solutions at the end of the program.
 	*/
-	uint8_t* int_iter;
+	uint32_t* int_iter;
 
 	/*
 	The constant coefficient of each partial derivatives. 
@@ -343,8 +343,8 @@ public:
 	/*
 	current iteration and dimension
 	*/
-	uint8_t iter;
-	uint8_t dim;
+	uint32_t iter;
+	uint32_t dim;
 
 	/*
 	the optimal polynomial values over the center certain boxes
@@ -380,25 +380,25 @@ public:
 	float* dev_debug;
 };
 
-__global__ void biBCdilationKernelPart1Forx1(float* target_BC, uint8_t x1degree, uint16_t unitLength);
+__global__ void biBCdilationKernelPart1Forx1(float* target_BC, uint32_t x1degree, uint32_t unitLength);
 
-__global__ void biBCdilationKernelPart1Forx2(float* target_BC, uint8_t x2degree, uint16_t unitLength);
+__global__ void biBCdilationKernelPart1Forx2(float* target_BC, uint32_t x2degree, uint32_t unitLength);
 
-__global__ void triBCdilationKernelPart1Forx1(float* target_BC, uint8_t x1degree, uint16_t unitLength);
+__global__ void triBCdilationKernelPart1Forx1(float* target_BC, uint32_t x1degree, uint32_t unitLength);
 
-__global__ void triBCdilationKernelPart1Forx2(float* target_BC, uint8_t x2degree, uint16_t unitLength);
+__global__ void triBCdilationKernelPart1Forx2(float* target_BC, uint32_t x2degree, uint32_t unitLength);
 
-__global__ void triBCdilationKernelPart1Forx3(float* target_BC, uint8_t x2degree, uint16_t unitLength);
+__global__ void triBCdilationKernelPart1Forx3(float* target_BC, uint32_t x2degree, uint32_t unitLength);
 
-__global__ void quadBCdilationKernelPart1Forx1(float* target_BC, uint8_t x1degree, uint16_t unitLength);
+__global__ void quadBCdilationKernelPart1Forx1(float* target_BC, uint32_t x1degree, uint32_t unitLength);
 
-__global__ void quadBCdilationKernelPart1Forx2(float* target_BC, uint8_t x2degree, uint16_t unitLength);
+__global__ void quadBCdilationKernelPart1Forx2(float* target_BC, uint32_t x2degree, uint32_t unitLength);
 
-__global__ void quadBCdilationKernelPart1Forx3(float* target_BC, uint8_t x3degree, uint16_t unitLength);
+__global__ void quadBCdilationKernelPart1Forx3(float* target_BC, uint32_t x3degree, uint32_t unitLength);
 
-__global__ void quadBCdilationKernelPart1Forx4(float* target_BC, uint8_t x4degree, uint16_t unitLength);
+__global__ void quadBCdilationKernelPart1Forx4(float* target_BC, uint32_t x4degree, uint32_t unitLength);
 
-__global__ void BCdilationKernelPart2(uint32_t* target_interval, bool* target_pdFlag, uint8_t dim, float* target_pdValue);
+__global__ void BCdilationKernelPart2(uint32_t* target_interval, bool* target_pdFlag, uint32_t dim, float* target_pdValue);
 
 __global__ void BCdilationKernelPart3(char* target_consFlag);
 
@@ -414,11 +414,11 @@ __global__ void BCfindBoundKernel(float* bdMin, float* bdMax, float* BC);
 
 __global__ void BCfindDerivativeKernel(bool* pdFlag, float* BC, float* pdValue);
 
-__global__ void biBCfinddFlagKernel(bool* dFlag, bool* pdFlag, uint8_t numDimension, uint32_t* interval, uint8_t iter_0, uint8_t iter_1);
+__global__ void biBCfinddFlagKernel(bool* dFlag, bool* pdFlag, uint32_t numDimension, uint32_t* interval, uint32_t iter_0, uint32_t iter_1);
 
-__global__ void triBCfinddFlagKernel(bool* dFlag, bool* pdFlag, uint8_t numDimension, uint32_t* interval, uint8_t iter_0, uint8_t iter_1, uint8_t iter_2);
+__global__ void triBCfinddFlagKernel(bool* dFlag, bool* pdFlag, uint32_t numDimension, uint32_t* interval, uint32_t iter_0, uint32_t iter_1, uint32_t iter_2);
 
-__global__ void quadBCfinddFlagKernel(bool* dFlag, bool* pdFlag, uint8_t numDimension, uint32_t* interval, uint8_t iter_0, uint8_t iter_1, uint8_t iter_2, uint8_t iter_3);
+__global__ void quadBCfinddFlagKernel(bool* dFlag, bool* pdFlag, uint32_t numDimension, uint32_t* interval, uint32_t iter_0, uint32_t iter_1, uint32_t iter_2, uint32_t iter_3);
 
 __global__ void BCeliminateKernelPart1(float* target_BC, uint32_t* elimPos, uint32_t* savePos, uint32_t saveNum);
 
@@ -428,10 +428,10 @@ __global__ void BCeliminateKernelPart3(float* target_BC, char* target_consFlag, 
 
 __global__ void BCeliminateKernelPart4(float* target_BC, bool* target_pdFlag, uint32_t* elimPos, uint32_t* savePos, uint32_t saveNum);
 
-__global__ void biBCfinalResultKernel(float* target_intervalRes, uint32_t* interval, uint8_t iter_1, uint8_t iter_2);
+__global__ void biBCfinalResultKernel(float* target_intervalRes, uint32_t* interval, uint32_t iter_1, uint32_t iter_2);
 
-__global__ void triBCfinalResultKernel(float* target_intervalRes, uint32_t* interval, uint8_t iter_1, uint8_t iter_2, uint8_t iter_3);
+__global__ void triBCfinalResultKernel(float* target_intervalRes, uint32_t* interval, uint32_t iter_1, uint32_t iter_2, uint32_t iter_3);
 
-__global__ void quadBCfinalResultKernel(float* target_intervalRes, uint32_t* interval, uint8_t iter_1, uint8_t iter_2, uint8_t iter_3, uint8_t iter_4);
+__global__ void quadBCfinalResultKernel(float* target_intervalRes, uint32_t* interval, uint32_t iter_1, uint32_t iter_2, uint32_t iter_3, uint32_t iter_4);
 
 #endif

@@ -23,21 +23,21 @@ BC::BC(poly* opt_in, uint32_t numCons_in, poly* cons_in, uint32_t numEqus_in, po
 		MAX_UNIT_NUM = fourd_MAX_UNIT_NUM;
 	}
 
-	opt_degree = new uint8_t[numDimension];
-	if (numCons > 0) con_degree = new uint8_t[numDimension];
+	opt_degree = new uint32_t[numDimension];
+	if (numCons > 0) con_degree = new uint32_t[numDimension];
 	else con_degree = nullptr;
-	if (numEqus > 0) equ_degree = new uint8_t[numDimension];
+	if (numEqus > 0) equ_degree = new uint32_t[numDimension];
 	else equ_degree = nullptr;
 
 	opt_unitLength = con_unitLength = equ_unitLength = 1;
-	for (uint8_t i = 0; i < numDimension; i++)
+	for (uint32_t i = 0; i < numDimension; i++)
 	{
 		opt_degree[i] = opt_in->maxDegree[i];
 		opt_unitLength *= opt_degree[i];
 
 		if (numCons > 0) {
 			con_degree[i] = 0;
-			for (uint8_t j = 0; j < numCons; j++) {
+			for (uint32_t j = 0; j < numCons; j++) {
 				if (cons_in[j].maxDegree[i] > con_degree[i]) {
 					con_degree[i] = cons_in[j].maxDegree[i];
 				}
@@ -47,7 +47,7 @@ BC::BC(poly* opt_in, uint32_t numCons_in, poly* cons_in, uint32_t numEqus_in, po
 
 		if (numEqus > 0) {
 			equ_degree[i] = 0;
-			for (uint8_t j = 0; j < numEqus; j++) {
+			for (uint32_t j = 0; j < numEqus; j++) {
 				if (equs_in[j].maxDegree[i] > equ_degree[i]) {
 					equ_degree[i] = equs_in[j].maxDegree[i];
 				}
@@ -60,11 +60,11 @@ BC::BC(poly* opt_in, uint32_t numCons_in, poly* cons_in, uint32_t numEqus_in, po
 	opt_BC = new float[opt_unitLength];
 	memset(opt_BC, 0, opt_unitLength * sizeof(float));
 
-	uint16_t index, currentPos, currentDegree;
+	uint32_t index, currentPos, currentDegree;
 	float BCterm;
 
-	for (uint16_t i = 0; i < opt_in->numTerms; i++) {
-		for (uint16_t j = 0; j < opt_unitLength; j++) {
+	for (uint32_t i = 0; i < opt_in->numTerms; i++) {
+		for (uint32_t j = 0; j < opt_unitLength; j++) {
 			index = j;
 			BCterm = 1;
 			for (int k = 0; k < numDimension; k++) {
@@ -85,13 +85,13 @@ BC::BC(poly* opt_in, uint32_t numCons_in, poly* cons_in, uint32_t numEqus_in, po
 	pd_BC = new float[numDimension * opt_unitLength];
 	memset(pd_BC, 0, numDimension * opt_unitLength * sizeof(float));
 
-	uint16_t pdOffset = 0;
+	uint32_t pdOffset = 0;
 	poly* pd = nullptr;
 	float pdValueBuf = 0;
-	for (uint8_t pdID = 0; pdID < numDimension; pdID++) {
+	for (uint32_t pdID = 0; pdID < numDimension; pdID++) {
 		opt->partialDerivative(pd, pdValueBuf, pdID);
-		for (uint16_t i = 0; i < pd->numTerms; i++) {
-			for (uint16_t j = 0; j < opt_unitLength; j++) {
+		for (uint32_t i = 0; i < pd->numTerms; i++) {
+			for (uint32_t j = 0; j < opt_unitLength; j++) {
 				index = j;
 				BCterm = 1;
 				for (int k = 0; k < numDimension; k++) {
@@ -120,11 +120,11 @@ BC::BC(poly* opt_in, uint32_t numCons_in, poly* cons_in, uint32_t numEqus_in, po
 		con_BC = new float[numCons * con_unitLength];
 		memset(con_BC, 0, numCons * con_unitLength * sizeof(float));
 
-		uint16_t conOffset = 0;
+		uint32_t conOffset = 0;
 
-		for (uint8_t conID = 0; conID < numCons; conID++) {
-			for (uint16_t i = 0; i < cons[conID].numTerms; i++) {
-				for (uint16_t j = 0; j < con_unitLength; j++) {
+		for (uint32_t conID = 0; conID < numCons; conID++) {
+			for (uint32_t i = 0; i < cons[conID].numTerms; i++) {
+				for (uint32_t j = 0; j < con_unitLength; j++) {
 					index = j;
 					BCterm = 1;
 					for (int k = 0; k < numDimension; k++) {
@@ -152,11 +152,11 @@ BC::BC(poly* opt_in, uint32_t numCons_in, poly* cons_in, uint32_t numEqus_in, po
 		equ_BC = new float[numEqus * equ_unitLength];
 		memset(equ_BC, 0, numEqus * equ_unitLength * sizeof(float));
 
-		uint16_t equOffset = 0;
+		uint32_t equOffset = 0;
 
-		for (uint8_t equID = 0; equID < numEqus; equID++) {
-			for (uint16_t i = 0; i < equs[equID].numTerms; i++) {
-				for (uint16_t j = 0; j < equ_unitLength; j++) {
+		for (uint32_t equID = 0; equID < numEqus; equID++) {
+			for (uint32_t i = 0; i < equs[equID].numTerms; i++) {
+				for (uint32_t j = 0; j < equ_unitLength; j++) {
 					index = j;
 					BCterm = 1;
 					for (int k = 0; k < numDimension; k++) {
@@ -185,8 +185,8 @@ BC::BC(poly* opt_in, uint32_t numCons_in, poly* cons_in, uint32_t numEqus_in, po
 	cudaMalloc((void**)&dev_interval, MAX_UNIT_NUM * numDimension * sizeof(uint32_t));
 	cudaMemcpy(dev_interval, interval, numDimension * sizeof(uint32_t), cudaMemcpyHostToDevice);
 
-	int_iter = new uint8_t[numDimension];
-	memset(int_iter, 0, numDimension * sizeof(uint8_t));
+	int_iter = new uint32_t[numDimension];
+	memset(int_iter, 0, numDimension * sizeof(uint32_t));
 
 	bdMin = new float[MAX_UNIT_NUM];
 	cudaMalloc((void**)&dev_bdMin, MAX_UNIT_NUM * sizeof(float));
@@ -196,7 +196,7 @@ BC::BC(poly* opt_in, uint32_t numCons_in, poly* cons_in, uint32_t numEqus_in, po
 
 	//pdFlag = new bool[MAX_UNIT_NUM * numDimension];
 	pdFlag = new bool[numDimension];
-	for (uint8_t i = 0; i < numDimension; i++) {
+	for (uint32_t i = 0; i < numDimension; i++) {
 		pdFlag[i] = true;
 	}
 	cudaMalloc((void**)&dev_pdFlag, numDimension * MAX_UNIT_NUM * sizeof(bool));
@@ -208,7 +208,7 @@ BC::BC(poly* opt_in, uint32_t numCons_in, poly* cons_in, uint32_t numEqus_in, po
 	if (numCons > 0) {
 		//consFlag = new char[numCons * MAX_UNIT_NUM];
 		consFlag = new char[numCons];
-		for (uint8_t i = 0; i < numCons; i++) {
+		for (uint32_t i = 0; i < numCons; i++) {
 			consFlag[i] = 1;
 		}
 		cudaMalloc((void**)&dev_consFlag, numCons * MAX_UNIT_NUM * sizeof(char));
@@ -419,7 +419,7 @@ void BC::debug_print()
 	for (uint32_t i = 0; i < debugNumUnit; i++)
 	{
 		mexPrintf("%d. [", i);
-		for (uint8_t j = 0; j < numDimension; j++) {
+		for (uint32_t j = 0; j < numDimension; j++) {
 			mexPrintf(" %d", interval[i * numDimension + j]);
 		}
 		mexPrintf("]  ");
@@ -427,20 +427,20 @@ void BC::debug_print()
 		mexPrintf("[%.6f %.6f]  | ", bdMin[i], bdMax[i]);
 
 		if (numCons > 0) {
-			for (uint8_t j = 0; j < numCons; j++) {
+			for (uint32_t j = 0; j < numCons; j++) {
 				mexPrintf("%d ", consFlag[i * numCons + j]);
 			}
 			mexPrintf(":%d | ", intFlag[i]);
 		}
 
 		if (numEqus > 0) {
-			for (uint8_t j = 0; j < numEqus; j++) {
+			for (uint32_t j = 0; j < numEqus; j++) {
 				mexPrintf("%d ", equsFlag[i * numEqus + j]);
 			}
 			mexPrintf(":%d | ", eFlag[i]);
 		}
 
-		for (uint8_t j = 0; j < numDimension; j++) {
+		for (uint32_t j = 0; j < numDimension; j++) {
 			mexPrintf("%d ", pdFlag[i * numDimension + j]);
 		}
 		mexPrintf(":%d\n", dFlag[i]);
@@ -448,7 +448,7 @@ void BC::debug_print()
 	mexPrintf("\n");
 }
 
-void BC::dilation(uint8_t dim) {
+void BC::dilation(uint32_t dim) {
 	if (numDimension == 2) {
 		if (dim == 0) {
 			biBCdilationKernelPart1Forx1 << < numUnit, opt_degree[1] >> > (dev_opt_BC, opt_degree[0], opt_unitLength);
@@ -588,7 +588,7 @@ void BC::dilation(uint8_t dim) {
 	numUnit <<= 1;
 }
 
-__global__ void biBCdilationKernelPart1Forx1(float* target_BC, uint8_t x1degree, uint16_t unitLength)
+__global__ void biBCdilationKernelPart1Forx1(float* target_BC, uint32_t x1degree, uint32_t unitLength)
 {
 	int unitID = blockIdx.x;
 	int unitOffset = gridDim.x;
@@ -618,7 +618,7 @@ __global__ void biBCdilationKernelPart1Forx1(float* target_BC, uint8_t x1degree,
 	}
 }
 
-__global__ void biBCdilationKernelPart1Forx2(float* target_BC, uint8_t x2degree, uint16_t unitLength)
+__global__ void biBCdilationKernelPart1Forx2(float* target_BC, uint32_t x2degree, uint32_t unitLength)
 {
 	int unitID = blockIdx.x;
 	int unitOffset = gridDim.x;
@@ -649,7 +649,7 @@ __global__ void biBCdilationKernelPart1Forx2(float* target_BC, uint8_t x2degree,
 	}
 }
 
-__global__ void triBCdilationKernelPart1Forx1(float* target_BC, uint8_t x1degree, uint16_t unitLength)
+__global__ void triBCdilationKernelPart1Forx1(float* target_BC, uint32_t x1degree, uint32_t unitLength)
 {
 	int unitID = blockIdx.x;
 	int unitOffset = gridDim.x;
@@ -682,7 +682,7 @@ __global__ void triBCdilationKernelPart1Forx1(float* target_BC, uint8_t x1degree
 	}
 }
 
-__global__ void triBCdilationKernelPart1Forx2(float* target_BC, uint8_t x2degree, uint16_t unitLength)
+__global__ void triBCdilationKernelPart1Forx2(float* target_BC, uint32_t x2degree, uint32_t unitLength)
 {
 	int unitID = blockIdx.x;
 	int unitOffset = gridDim.x;
@@ -715,7 +715,7 @@ __global__ void triBCdilationKernelPart1Forx2(float* target_BC, uint8_t x2degree
 	}
 }
 
-__global__ void triBCdilationKernelPart1Forx3(float* target_BC, uint8_t x3degree, uint16_t unitLength)
+__global__ void triBCdilationKernelPart1Forx3(float* target_BC, uint32_t x3degree, uint32_t unitLength)
 {
 	int unitID = blockIdx.x;
 	int unitOffset = gridDim.x;
@@ -748,7 +748,7 @@ __global__ void triBCdilationKernelPart1Forx3(float* target_BC, uint8_t x3degree
 	}
 }
 
-__global__ void quadBCdilationKernelPart1Forx1(float* target_BC, uint8_t x1degree, uint16_t unitLength)
+__global__ void quadBCdilationKernelPart1Forx1(float* target_BC, uint32_t x1degree, uint32_t unitLength)
 {
 	int unitID = blockIdx.x;
 	int unitOffset = gridDim.x;
@@ -783,7 +783,7 @@ __global__ void quadBCdilationKernelPart1Forx1(float* target_BC, uint8_t x1degre
 	}
 }
 
-__global__ void quadBCdilationKernelPart1Forx2(float* target_BC, uint8_t x2degree, uint16_t unitLength)
+__global__ void quadBCdilationKernelPart1Forx2(float* target_BC, uint32_t x2degree, uint32_t unitLength)
 {
 	int unitID = blockIdx.x;
 	int unitOffset = gridDim.x;
@@ -818,7 +818,7 @@ __global__ void quadBCdilationKernelPart1Forx2(float* target_BC, uint8_t x2degre
 	}
 }
 
-__global__ void quadBCdilationKernelPart1Forx3(float* target_BC, uint8_t x3degree, uint16_t unitLength)
+__global__ void quadBCdilationKernelPart1Forx3(float* target_BC, uint32_t x3degree, uint32_t unitLength)
 {
 	int unitID = blockIdx.x;
 	int unitOffset = gridDim.x;
@@ -853,7 +853,7 @@ __global__ void quadBCdilationKernelPart1Forx3(float* target_BC, uint8_t x3degre
 	}
 }
 
-__global__ void quadBCdilationKernelPart1Forx4(float* target_BC, uint8_t x4degree, uint16_t unitLength)
+__global__ void quadBCdilationKernelPart1Forx4(float* target_BC, uint32_t x4degree, uint32_t unitLength)
 {
 	int unitID = blockIdx.x;
 	int unitOffset = gridDim.x;
@@ -888,7 +888,7 @@ __global__ void quadBCdilationKernelPart1Forx4(float* target_BC, uint8_t x4degre
 	}
 }
 
-__global__ void BCdilationKernelPart2(uint32_t* target_interval, bool* target_pdFlag, uint8_t dim, float* target_pdValue) {
+__global__ void BCdilationKernelPart2(uint32_t* target_interval, bool* target_pdFlag, uint32_t dim, float* target_pdValue) {
 	int unitID = blockIdx.x;
 	int intID = threadIdx.x;
 	int numDimension = blockDim.x;
@@ -1116,7 +1116,7 @@ __global__ void BCfindDerivativeKernel(bool* pdFlag, float* BC, float* pdValue)
 	}
 }
 
-__global__ void biBCfinddFlagKernel(bool* dFlag, bool* pdFlag, uint8_t numDimension, uint32_t* interval, uint8_t iter_0, uint8_t iter_1) {
+__global__ void biBCfinddFlagKernel(bool* dFlag, bool* pdFlag, uint32_t numDimension, uint32_t* interval, uint32_t iter_0, uint32_t iter_1) {
 	int flagID = blockIdx.x;
 	for (int pdID = flagID * numDimension; pdID < (flagID + 1) * numDimension; pdID++) {
 		if (pdFlag[pdID] == false) {
@@ -1137,7 +1137,7 @@ __global__ void biBCfinddFlagKernel(bool* dFlag, bool* pdFlag, uint8_t numDimens
 	dFlag[flagID] = true;
 }
 
-__global__ void triBCfinddFlagKernel(bool* dFlag, bool* pdFlag, uint8_t numDimension, uint32_t* interval, uint8_t iter_0, uint8_t iter_1, uint8_t iter_2) {
+__global__ void triBCfinddFlagKernel(bool* dFlag, bool* pdFlag, uint32_t numDimension, uint32_t* interval, uint32_t iter_0, uint32_t iter_1, uint32_t iter_2) {
 	int flagID = blockIdx.x;
 	for (int pdID = flagID * numDimension; pdID < (flagID + 1) * numDimension; pdID++) {
 		if (pdFlag[pdID] == false) {
@@ -1162,7 +1162,7 @@ __global__ void triBCfinddFlagKernel(bool* dFlag, bool* pdFlag, uint8_t numDimen
 	dFlag[flagID] = true;
 }
 
-__global__ void quadBCfinddFlagKernel(bool* dFlag, bool* pdFlag, uint8_t numDimension, uint32_t* interval, uint8_t iter_0, uint8_t iter_1, uint8_t iter_2, uint8_t iter_3) {
+__global__ void quadBCfinddFlagKernel(bool* dFlag, bool* pdFlag, uint32_t numDimension, uint32_t* interval, uint32_t iter_0, uint32_t iter_1, uint32_t iter_2, uint32_t iter_3) {
 	int flagID = blockIdx.x;
 	for (int pdID = flagID * numDimension; pdID < (flagID + 1) * numDimension; pdID++) {
 		if (pdFlag[pdID] == false) {
@@ -1428,12 +1428,12 @@ void BC::finalResult() {
 		estiMin = FLT_MAX;
 		for (uint32_t optID = 0; optID < numUnit; optID++) {
 			candidates[optID] = 0;
-			for (uint16_t k = 0; k < opt->numTerms; k++)
+			for (uint32_t k = 0; k < opt->numTerms; k++)
 			{
 				float result = opt->coeff[k];
-				for (uint16_t i = 0; i < numDimension; i++)
+				for (uint32_t i = 0; i < numDimension; i++)
 				{
-					for (uint16_t j = 0; j < opt->degree[k * numDimension + i]; j++)
+					for (uint32_t j = 0; j < opt->degree[k * numDimension + i]; j++)
 					{
 						result *= intervalRes[optID * numDimension + i];
 					}
@@ -1459,7 +1459,7 @@ void BC::finalResult() {
 	}
 }
 
-__global__ void biBCfinalResultKernel(float* target_intervalRes, uint32_t* interval, uint8_t iter_1, uint8_t iter_2) {
+__global__ void biBCfinalResultKernel(float* target_intervalRes, uint32_t* interval, uint32_t iter_1, uint32_t iter_2) {
 	int id = blockIdx.x * blockDim.x + threadIdx.x;
 	if (threadIdx.x == 0) {
 		target_intervalRes[id] = ((float)(interval[id]) + 0.5) / (float)(1 << ((uint32_t)iter_1));
@@ -1469,7 +1469,7 @@ __global__ void biBCfinalResultKernel(float* target_intervalRes, uint32_t* inter
 	}
 }
 
-__global__ void triBCfinalResultKernel(float* target_intervalRes, uint32_t* interval, uint8_t iter_1, uint8_t iter_2, uint8_t iter_3) {
+__global__ void triBCfinalResultKernel(float* target_intervalRes, uint32_t* interval, uint32_t iter_1, uint32_t iter_2, uint32_t iter_3) {
 	int id = blockIdx.x * blockDim.x + threadIdx.x;
 	if (threadIdx.x == 0) {
 		target_intervalRes[id] = ((float)(interval[id]) + 0.5) / (float)(1 << ((uint32_t)iter_1));
@@ -1482,7 +1482,7 @@ __global__ void triBCfinalResultKernel(float* target_intervalRes, uint32_t* inte
 	}
 }
 
-__global__ void quadBCfinalResultKernel(float* target_intervalRes, uint32_t* interval, uint8_t iter_1, uint8_t iter_2, uint8_t iter_3, uint8_t iter_4) {
+__global__ void quadBCfinalResultKernel(float* target_intervalRes, uint32_t* interval, uint32_t iter_1, uint32_t iter_2, uint32_t iter_3, uint32_t iter_4) {
 	int id = blockIdx.x * blockDim.x + threadIdx.x;
 	if (threadIdx.x == 0) {
 		target_intervalRes[id] = ((float)(interval[id]) + 0.5) / (float)(1 << ((uint32_t)iter_1));

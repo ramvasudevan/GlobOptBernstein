@@ -124,12 +124,12 @@ public:
 							   <----                    n + 1 columns                  ---->
 	EEFECT: defined constructer of the class
 	*/
-	poly(uint8_t numDimension_input, uint16_t numTerms_input, float* data_mat);
+	poly(uint32_t numDimension_input, uint32_t numTerms_input, float* data_mat);
 
 	/*
 	EFFECT: another default destructer of the class, using MATLAB mexArray as input for data_mat
 	*/
-	poly(uint8_t numDimension_input, uint16_t numTerms_input, double* data_mat);
+	poly(uint32_t numDimension_input, uint32_t numTerms_input, double* data_mat);
 
 	/*
 	REQUIRE:
@@ -145,7 +145,7 @@ public:
 							  <----                                 m entries                             ---->
 	EEFECT: defined constructer of the class
 	*/
-	poly(uint8_t numDimension_input, uint16_t numTerms_input, double* degree_input, double* coef_input);
+	poly(uint32_t numDimension_input, uint32_t numTerms_input, double* degree_input, double* coef_input);
 
 	/*
 	EEFECT: print all the details of this polynomial on screen. used for debug.
@@ -160,22 +160,22 @@ public:
 	EEFECT: asign res to be the dim th partial derivative of the polynomial. assign res_value to be the constant term of the partial derivative.
 	MODIFIES: res, res_value
 	*/
-	void partialDerivative(poly* &res, float &res_value, uint8_t dim);
+	void partialDerivative(poly* &res, float &res_value, uint32_t dim);
 
 	// number of dimension
-	uint8_t numDimension;
+	uint32_t numDimension;
 
 	// number of terms
-	uint16_t numTerms;
+	uint32_t numTerms;
 
 	// an array for coefficients
 	float * coeff;
 
 	// an array for degrees of x
-	uint8_t * degree;
+	uint32_t * degree;
 
 	// an array for the max degree over each dimension
-	uint8_t * maxDegree;
+	uint32_t * maxDegree;
 };
 
 # endif

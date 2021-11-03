@@ -15,4 +15,3 @@ function [bernstein_cost,bernstein_constraints,bernstein_cons_length] = setup_pr
     end
     bernstein_constraints = bernstein_constraints';
 end
-
